@@ -4,14 +4,14 @@
 <text x="16" y="42" font-size="12" fill="#64748b">median of the repeats &#183; higher is better</text>
 <text x="16" y="68" font-size="12" font-weight="600" fill="#334155">udp-100k</text>
 <text x="142" y="90" text-anchor="end" font-size="12" fill="#475569">zeptun-hybrid</text>
-<rect x="150" y="76" width="666" height="16" rx="3" fill="#2563eb"/>
-<text x="824" y="90" font-size="12" fill="#0f172a">77884 pps</text>
+<rect x="150" y="76" width="669" height="16" rx="3" fill="#2563eb"/>
+<text x="827" y="90" font-size="12" fill="#0f172a">78457 pps</text>
 <text x="142" y="114" text-anchor="end" font-size="12" fill="#475569">zeptun-userspace</text>
-<rect x="150" y="100" width="668" height="16" rx="3" fill="#64748b"/>
-<text x="826" y="114" font-size="12" fill="#0f172a">78121 pps</text>
+<rect x="150" y="100" width="680" height="16" rx="3" fill="#64748b"/>
+<text x="838" y="114" font-size="12" fill="#0f172a">79692 pps</text>
 <text x="142" y="138" text-anchor="end" font-size="12" fill="#475569">hev</text>
-<rect x="150" y="124" width="647" height="16" rx="3" fill="#0f766e"/>
-<text x="805" y="138" font-size="12" fill="#0f172a">75687 pps</text>
+<rect x="150" y="124" width="636" height="16" rx="3" fill="#0f766e"/>
+<text x="794" y="138" font-size="12" fill="#0f172a">74622 pps</text>
 <text x="142" y="162" text-anchor="end" font-size="12" fill="#475569">singbox-gvisor</text>
 <rect x="150" y="148" width="2" height="16" rx="3" fill="#b45309"/>
 <text x="160" y="162" font-size="12" fill="#0f172a">0.00 pps</text>
@@ -19,18 +19,18 @@
 <rect x="150" y="172" width="2" height="16" rx="3" fill="#7c3aed"/>
 <text x="160" y="186" font-size="12" fill="#0f172a">0.00 pps</text>
 <text x="142" y="210" text-anchor="end" font-size="12" fill="#475569">tun2socks</text>
-<rect x="150" y="196" width="343" height="16" rx="3" fill="#be123c"/>
-<text x="501" y="210" font-size="12" fill="#0f172a">40083 pps</text>
+<rect x="150" y="196" width="349" height="16" rx="3" fill="#be123c"/>
+<text x="507" y="210" font-size="12" fill="#0f172a">40912 pps</text>
 <text x="16" y="250" font-size="12" font-weight="600" fill="#334155">udp-gso-100k</text>
 <text x="142" y="272" text-anchor="end" font-size="12" fill="#475569">zeptun-hybrid</text>
-<rect x="150" y="258" width="680" height="16" rx="3" fill="#2563eb"/>
-<text x="838" y="272" font-size="12" fill="#0f172a">79454 pps</text>
+<rect x="150" y="258" width="678" height="16" rx="3" fill="#2563eb"/>
+<text x="836" y="272" font-size="12" fill="#0f172a">79503 pps</text>
 <text x="142" y="296" text-anchor="end" font-size="12" fill="#475569">zeptun-userspace</text>
-<rect x="150" y="282" width="668" height="16" rx="3" fill="#64748b"/>
-<text x="826" y="296" font-size="12" fill="#0f172a">78128 pps</text>
+<rect x="150" y="282" width="674" height="16" rx="3" fill="#64748b"/>
+<text x="832" y="296" font-size="12" fill="#0f172a">79060 pps</text>
 <text x="142" y="320" text-anchor="end" font-size="12" fill="#475569">hev</text>
-<rect x="150" y="306" width="641" height="16" rx="3" fill="#0f766e"/>
-<text x="799" y="320" font-size="12" fill="#0f172a">74989 pps</text>
+<rect x="150" y="306" width="637" height="16" rx="3" fill="#0f766e"/>
+<text x="795" y="320" font-size="12" fill="#0f172a">74705 pps</text>
 <text x="142" y="344" text-anchor="end" font-size="12" fill="#475569">singbox-gvisor</text>
 <rect x="150" y="330" width="2" height="16" rx="3" fill="#b45309"/>
 <text x="160" y="344" font-size="12" fill="#0f172a">0.00 pps</text>
@@ -38,6 +38,6 @@
 <rect x="150" y="354" width="2" height="16" rx="3" fill="#7c3aed"/>
 <text x="160" y="368" font-size="12" fill="#0f172a">0.00 pps</text>
 <text x="142" y="392" text-anchor="end" font-size="12" fill="#475569">tun2socks</text>
-<rect x="150" y="378" width="369" height="16" rx="3" fill="#be123c"/>
-<text x="527" y="392" font-size="12" fill="#0f172a">43229 pps</text>
+<rect x="150" y="378" width="373" height="16" rx="3" fill="#be123c"/>
+<text x="531" y="392" font-size="12" fill="#0f172a">43715 pps</text>
 </svg>
