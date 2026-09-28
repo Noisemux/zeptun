@@ -107,7 +107,7 @@ pub fn applyRoutes(cfg: *const config.Config, ifname: []const u8, state: *State)
             .include_extra = cfg.route.include_extra,
             .exclude_extra = cfg.route.exclude_extra,
             .strict = cfg.route.strict,
-            .dns_to_tunnel = cfg.dns.hijack,
+            .dns_to_tunnel = cfg.dns.hijack or cfg.dns.fake_ip,
             .excluded_uids = uid_pairs[0..uids.len],
             .include_interfaces = inc_if[0..cfg.route.include_interfaces.len],
             .exclude_interfaces = exc_if[0..cfg.route.exclude_interfaces.len],
@@ -118,6 +118,9 @@ pub fn applyRoutes(cfg: *const config.Config, ifname: []const u8, state: *State)
         if (resolved.supported and ifname.len < state.ifname.len) {
             @memcpy(state.ifname[0..ifname.len], ifname);
             state.resolved = resolved.apply(cfg, ifname);
+            if (!state.resolved and cfg.dnsActive()) {
+                log.warn("route: systemd-resolved handover failed; DNS queries will leave this host over its real resolver and fake-ip will not be used", .{});
+            }
         }
         return;
     }

@@ -562,7 +562,7 @@ pub fn Tcp(comptime W: type) type {
             }
             if (result != .success) {
                 w.counters.inc(.tcp_connect_failed);
-                log.debug("tcp dial {f} failed: {t}", .{ c.target, result });
+                log.debug("tcp dial failed: {t}", .{result});
                 t.abort(w, c, true);
                 return;
             }

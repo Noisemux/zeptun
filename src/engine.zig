@@ -938,14 +938,25 @@ pub const Engine = struct {
         return e;
     }
 
+    extern "advapi32" fn SystemFunction036(buf: [*]u8, len: u32) callconv(.winapi) u8;
+
     fn fillRandom(buf: []u8) void {
-        if (sys.is_linux) {
-            _ = std.os.linux.getrandom(buf.ptr, buf.len, 0);
-        } else if (sys.is_darwin or sys.is_bsd) {
+        const filled = if (sys.is_linux)
+            std.os.linux.getrandom(buf.ptr, buf.len, 0) == buf.len
+        else if (sys.is_darwin or sys.is_bsd) blk: {
             std.c.arc4random_buf(buf.ptr, buf.len);
-        } else {
-            const t = sys.monotonicNs();
-            for (buf, 0..) |*b, i| b.* = @truncate(t >> @intCast((i * 8) % 64));
+            break :blk true;
+        } else if (sys.is_windows)
+            SystemFunction036(buf.ptr, @intCast(buf.len)) != 0
+        else
+            false;
+        if (filled) return;
+        var anchor: u8 = 0;
+        var s: u64 = sys.monotonicNs() *% 0x9e37_79b9_7f4a_7c15 ^ @as(u64, @intFromPtr(&anchor));
+        var i: usize = 0;
+        while (i < buf.len) : (i += 1) {
+            s = s *% 6364136223846793005 +% 1442695040888963407;
+            buf[i] = @truncate(s >> 33);
         }
     }
 
@@ -1019,6 +1030,7 @@ pub const Engine = struct {
 
     fn initElastic(e: *Engine, cap: u16) !void {
         const el = try e.allocator.create(Elastic);
+        errdefer e.allocator.destroy(el);
         el.* = .{ .mode = e.cfg.io.elastic, .cap = cap, .cpus = sys.cpuCount() };
         e.elastic = el;
     }
@@ -1107,6 +1119,7 @@ pub const Engine = struct {
             return;
         }
         if (el.failed.load(.acquire) or live >= el.cap) return;
+        if (live >= el.threads.len) return;
         el.growing.store(true, .release);
         e.spawned.store(live + 1, .release);
         el.threads[live] = std.Thread.spawn(.{ .stack_size = 4 << 20 }, W.bootstrap, .{ e, live }) catch |err| {
@@ -1433,8 +1446,10 @@ pub const Engine = struct {
     }
 
     fn joinAll(e: *Engine, comptime W: type, list: []*W) void {
+        const spawned = e.spawned.load(.acquire);
+        const max_join = @min(spawned, e.worker_cap);
         var i: u16 = 0;
-        while (i < e.spawned.load(.acquire)) : (i += 1) {
+        while (i < max_join) : (i += 1) {
             if (i < e.worker_count) {
                 const w = list[i];
                 if (w.thread) |t| {
@@ -1442,9 +1457,11 @@ pub const Engine = struct {
                     w.thread = null;
                 }
             } else if (e.elastic) |el| {
-                if (el.threads[i]) |t| {
-                    t.join();
-                    el.threads[i] = null;
+                if (i < el.threads.len) {
+                    if (el.threads[i]) |t| {
+                        t.join();
+                        el.threads[i] = null;
+                    }
                 }
             }
         }
@@ -1482,6 +1499,23 @@ pub const Engine = struct {
 
     fn destroyAll(comptime W: type, allocator: std.mem.Allocator, list: []*W, live: u16) void {
         const made = list[0..live];
+        for (made) |w| w.drainInbox();
+        for (made) |w| _ = w.pool.drainRemote();
+        for (made) |w| w.destroy();
+        allocator.free(list);
+    }
+
+    fn destroyAllSafe(comptime W: type, allocator: std.mem.Allocator, list: []*W, live: u16) void {
+        const made = list[0..live];
+        for (made) |w| {
+            w.requestStop();
+        }
+        for (made) |w| {
+            if (w.thread) |t| {
+                t.join();
+                w.thread = null;
+            }
+        }
         for (made) |w| w.drainInbox();
         for (made) |w| _ = w.pool.drainRemote();
         for (made) |w| w.destroy();
