@@ -506,6 +506,10 @@ pub const Config = struct {
         if (c.route.auto_redirect and !build_options.enable_system_stack) return error.NotSupported;
         if (c.dns.fake_ip and c.handler.kind != .socks5) return error.InvalidArgument;
         if (c.dns.fake_ip and c.dns.fake_range4 == null and c.dns.fake_range6 == null) return error.InvalidArgument;
+        if (c.stack.icmp == .forward and c.handler.kind == .socks5) {
+            log.err("icmp.forward cannot be combined with a socks5 handler: echo requests would leave from the host's real address, bypassing the proxy. Use icmp.local, icmp.drop, or the direct handler", .{});
+            return error.InvalidArgument;
+        }
     }
 };
 
@@ -569,4 +573,21 @@ test "guid parsing accepts both spellings" {
     try std.testing.expectEqualSlices(u8, &plain.d4, &braced.d4);
     try std.testing.expectError(error.InvalidArgument, Guid.parse("nope"));
     try std.testing.expectError(error.InvalidArgument, Guid.parse("24198F4C78954 34C-AD35-9E29A92DDC51"));
+}
+
+test "icmp forward with a socks5 handler is rejected" {
+    var cfg = Config.fromPreset(.desktop);
+    cfg.handler.kind = .socks5;
+    cfg.handler.socks5.server = addr.Endpoint.parse("127.0.0.1:1080") catch unreachable;
+    cfg.stack.icmp = .forward;
+    try std.testing.expectError(error.InvalidArgument, cfg.validate());
+
+    cfg.stack.icmp = .auto;
+    try std.testing.expect(!cfg.icmpForward());
+    try cfg.validate();
+
+    cfg.handler.kind = .direct;
+    cfg.stack.icmp = .forward;
+    try std.testing.expect(cfg.icmpForward());
+    try cfg.validate();
 }
