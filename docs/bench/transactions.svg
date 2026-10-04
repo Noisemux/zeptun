@@ -4,59 +4,59 @@
 <text x="16" y="42" font-size="12" fill="#64748b">median of the repeats &#183; higher is better</text>
 <text x="16" y="68" font-size="12" font-weight="600" fill="#334155">rr</text>
 <text x="142" y="90" text-anchor="end" font-size="12" fill="#475569">zeptun-hybrid</text>
-<rect x="150" y="76" width="136" height="16" rx="3" fill="#2563eb"/>
-<text x="294" y="90" font-size="12" fill="#0f172a">6560 tps</text>
+<rect x="150" y="76" width="141" height="16" rx="3" fill="#2563eb"/>
+<text x="299" y="90" font-size="12" fill="#0f172a">10596 tps</text>
 <text x="142" y="114" text-anchor="end" font-size="12" fill="#475569">zeptun-userspace</text>
-<rect x="150" y="100" width="151" height="16" rx="3" fill="#64748b"/>
-<text x="309" y="114" font-size="12" fill="#0f172a">7273 tps</text>
+<rect x="150" y="100" width="155" height="16" rx="3" fill="#64748b"/>
+<text x="313" y="114" font-size="12" fill="#0f172a">11666 tps</text>
 <text x="142" y="138" text-anchor="end" font-size="12" fill="#475569">hev</text>
-<rect x="150" y="124" width="147" height="16" rx="3" fill="#0f766e"/>
-<text x="305" y="138" font-size="12" fill="#0f172a">7104 tps</text>
+<rect x="150" y="124" width="151" height="16" rx="3" fill="#0f766e"/>
+<text x="309" y="138" font-size="12" fill="#0f172a">11335 tps</text>
 <text x="142" y="162" text-anchor="end" font-size="12" fill="#475569">singbox-gvisor</text>
-<rect x="150" y="148" width="91" height="16" rx="3" fill="#b45309"/>
-<text x="249" y="162" font-size="12" fill="#0f172a">4409 tps</text>
+<rect x="150" y="148" width="92" height="16" rx="3" fill="#b45309"/>
+<text x="250" y="162" font-size="12" fill="#0f172a">6932 tps</text>
 <text x="142" y="186" text-anchor="end" font-size="12" fill="#475569">singbox-system</text>
-<rect x="150" y="172" width="115" height="16" rx="3" fill="#7c3aed"/>
-<text x="273" y="186" font-size="12" fill="#0f172a">5570 tps</text>
+<rect x="150" y="172" width="121" height="16" rx="3" fill="#7c3aed"/>
+<text x="279" y="186" font-size="12" fill="#0f172a">9133 tps</text>
 <text x="142" y="210" text-anchor="end" font-size="12" fill="#475569">tun2socks</text>
-<rect x="150" y="196" width="96" height="16" rx="3" fill="#be123c"/>
-<text x="254" y="210" font-size="12" fill="#0f172a">4625 tps</text>
+<rect x="150" y="196" width="99" height="16" rx="3" fill="#be123c"/>
+<text x="257" y="210" font-size="12" fill="#0f172a">7485 tps</text>
 <text x="16" y="250" font-size="12" font-weight="600" fill="#334155">rr-8x1k</text>
 <text x="142" y="272" text-anchor="end" font-size="12" fill="#475569">zeptun-hybrid</text>
-<rect x="150" y="258" width="614" height="16" rx="3" fill="#2563eb"/>
-<text x="772" y="272" font-size="12" fill="#0f172a">29565 tps</text>
+<rect x="150" y="258" width="604" height="16" rx="3" fill="#2563eb"/>
+<text x="762" y="272" font-size="12" fill="#0f172a">45304 tps</text>
 <text x="142" y="296" text-anchor="end" font-size="12" fill="#475569">zeptun-userspace</text>
-<rect x="150" y="282" width="667" height="16" rx="3" fill="#64748b"/>
-<text x="825" y="296" font-size="12" fill="#0f172a">32123 tps</text>
+<rect x="150" y="282" width="680" height="16" rx="3" fill="#64748b"/>
+<text x="838" y="296" font-size="12" fill="#0f172a">50986 tps</text>
 <text x="142" y="320" text-anchor="end" font-size="12" fill="#475569">hev</text>
-<rect x="150" y="306" width="680" height="16" rx="3" fill="#0f766e"/>
-<text x="838" y="320" font-size="12" fill="#0f172a">32732 tps</text>
+<rect x="150" y="306" width="582" height="16" rx="3" fill="#0f766e"/>
+<text x="740" y="320" font-size="12" fill="#0f172a">43680 tps</text>
 <text x="142" y="344" text-anchor="end" font-size="12" fill="#475569">singbox-gvisor</text>
-<rect x="150" y="330" width="361" height="16" rx="3" fill="#b45309"/>
-<text x="519" y="344" font-size="12" fill="#0f172a">17378 tps</text>
+<rect x="150" y="330" width="360" height="16" rx="3" fill="#b45309"/>
+<text x="518" y="344" font-size="12" fill="#0f172a">27062 tps</text>
 <text x="142" y="368" text-anchor="end" font-size="12" fill="#475569">singbox-system</text>
-<rect x="150" y="354" width="457" height="16" rx="3" fill="#7c3aed"/>
-<text x="615" y="368" font-size="12" fill="#0f172a">22007 tps</text>
+<rect x="150" y="354" width="418" height="16" rx="3" fill="#7c3aed"/>
+<text x="576" y="368" font-size="12" fill="#0f172a">31399 tps</text>
 <text x="142" y="392" text-anchor="end" font-size="12" fill="#475569">tun2socks</text>
-<rect x="150" y="378" width="384" height="16" rx="3" fill="#be123c"/>
-<text x="542" y="392" font-size="12" fill="#0f172a">18514 tps</text>
+<rect x="150" y="378" width="375" height="16" rx="3" fill="#be123c"/>
+<text x="533" y="392" font-size="12" fill="#0f172a">28184 tps</text>
 <text x="16" y="432" font-size="12" font-weight="600" fill="#334155">crr</text>
 <text x="142" y="454" text-anchor="end" font-size="12" fill="#475569">zeptun-hybrid</text>
-<rect x="150" y="440" width="32" height="16" rx="3" fill="#2563eb"/>
-<text x="190" y="454" font-size="12" fill="#0f172a">1568 tps</text>
+<rect x="150" y="440" width="27" height="16" rx="3" fill="#2563eb"/>
+<text x="185" y="454" font-size="12" fill="#0f172a">2053 tps</text>
 <text x="142" y="478" text-anchor="end" font-size="12" fill="#475569">zeptun-userspace</text>
-<rect x="150" y="464" width="41" height="16" rx="3" fill="#64748b"/>
-<text x="199" y="478" font-size="12" fill="#0f172a">1979 tps</text>
+<rect x="150" y="464" width="33" height="16" rx="3" fill="#64748b"/>
+<text x="191" y="478" font-size="12" fill="#0f172a">2490 tps</text>
 <text x="142" y="502" text-anchor="end" font-size="12" fill="#475569">hev</text>
-<rect x="150" y="488" width="36" height="16" rx="3" fill="#0f766e"/>
-<text x="194" y="502" font-size="12" fill="#0f172a">1763 tps</text>
+<rect x="150" y="488" width="30" height="16" rx="3" fill="#0f766e"/>
+<text x="188" y="502" font-size="12" fill="#0f172a">2298 tps</text>
 <text x="142" y="526" text-anchor="end" font-size="12" fill="#475569">singbox-gvisor</text>
-<rect x="150" y="512" width="23" height="16" rx="3" fill="#b45309"/>
-<text x="181" y="526" font-size="12" fill="#0f172a">1154 tps</text>
+<rect x="150" y="512" width="21" height="16" rx="3" fill="#b45309"/>
+<text x="179" y="526" font-size="12" fill="#0f172a">1634 tps</text>
 <text x="142" y="550" text-anchor="end" font-size="12" fill="#475569">singbox-system</text>
-<rect x="150" y="536" width="26" height="16" rx="3" fill="#7c3aed"/>
-<text x="184" y="550" font-size="12" fill="#0f172a">1294 tps</text>
+<rect x="150" y="536" width="23" height="16" rx="3" fill="#7c3aed"/>
+<text x="181" y="550" font-size="12" fill="#0f172a">1741 tps</text>
 <text x="142" y="574" text-anchor="end" font-size="12" fill="#475569">tun2socks</text>
-<rect x="150" y="560" width="24" height="16" rx="3" fill="#be123c"/>
-<text x="182" y="574" font-size="12" fill="#0f172a">1203 tps</text>
+<rect x="150" y="560" width="21" height="16" rx="3" fill="#be123c"/>
+<text x="179" y="574" font-size="12" fill="#0f172a">1594 tps</text>
 </svg>
