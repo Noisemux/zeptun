@@ -130,7 +130,7 @@ systemd_resolved = true
 | `[handler]` | `kind` (`socks5`, `direct`, `passthrough`), `tcp_fastopen`, `preserve_dscp` |
 | `[handler.socks5]` | `server`, `username`, `password`, `udp`, `udp_mode` (`udp`, `tcp`), `udp_address`, `pipeline`, `optimistic_data`, `pool_size`, `pool_idle_ms` |
 | `[handler.direct]` | `fwmark`, `bind_interface` |
-| `[route]` | `auto_route`, `table`, `rule_priority`, `fwmark`, `include`, `exclude`, `include_file`, `exclude_file`, `strict`, `auto_redirect`, `redirect_port`, `include_uid`, `exclude_uid`, `include_interface`, `exclude_interface`, `include_package`, `exclude_package`, `android_user` |
+| `[route]` | `auto_route`, `table`, `rule_priority`, `fwmark`, `include`, `exclude`, `include_file`, `exclude_file`, `strict`, `allow_app`, `auto_redirect`, `redirect_port`, `include_uid`, `exclude_uid`, `include_interface`, `exclude_interface`, `include_package`, `exclude_package`, `android_user` |
 | `[io]` | `backend` (`auto`, `io_uring`, `epoll`), `workers`, `elastic` (`auto`, `on`, `off`), `rx_parallel`, `tx_slots`, `multishot_rx`, `busy_poll_us`, `pin_cpus`, `monitor_network` |
 | `[dns]` | `fake_ip`, `fake_ranges`, `cache_size`, `ttl`, `address`, `hijack`, `upstream`, `systemd_resolved` |
 | `[memory]` | `budget_bytes`, `buffers_per_worker` |

@@ -372,6 +372,7 @@ pub const RouteConfig = struct {
     exclude_extra: []const addr.Prefix = &.{},
     dns: PrefixList = .{},
     strict: bool = false,
+    allow_apps: []const []const u8 = &.{},
     auto_redirect: bool = false,
     redirect_port: u16 = 0,
     include_uids: UidList = .{},

@@ -125,6 +125,7 @@ pub const Options = struct {
     ipv4: bool,
     ipv6: bool,
     block_dns: bool,
+    allow_apps: []const []const u8 = &.{},
 };
 
 pub const Handle = struct {
@@ -157,6 +158,25 @@ fn add(engine: ?*anyopaque, sub_layer: GUID, layer: GUID, weight: u8, action: u3
         log.err("wfp: adding filter failed (error 0x{x})", .{rc});
         return error.RouteError;
     }
+}
+
+fn permitApp(engine: ?*anyopaque, sub_layer: GUID, path: []const u8) !void {
+    var wide: [32768]u16 = undefined;
+    const n = std.unicode.utf8ToUtf16Le(wide[0 .. wide.len - 1], path) catch return error.InvalidArgument;
+    wide[n] = 0;
+    var app_id: ?*ByteBlob = null;
+    const rc = api.FwpmGetAppIdFromFileName0(@ptrCast(&wide), &app_id);
+    if (rc != 0 or app_id == null) {
+        log.warn("wfp: resolving the application id of {s} failed (error 0x{x})", .{ path, rc });
+        return error.RouteError;
+    }
+    defer {
+        var p: ?*anyopaque = @ptrCast(app_id);
+        api.FwpmFreeMemory0(&p);
+    }
+    const permit = [_]Condition{.{ .field_key = condition_app_id, .value = .{ .kind = value_byte_blob, .data = .{ .blob = app_id } } }};
+    try add(engine, sub_layer, layer_connect_v4, 13, action_permit, filter_flag_clear_action_right, &permit);
+    try add(engine, sub_layer, layer_connect_v6, 13, action_permit, filter_flag_clear_action_right, &permit);
 }
 
 pub fn install(options: Options) !Handle {
@@ -193,6 +213,9 @@ pub fn install(options: Options) !Handle {
     const permit_app = [_]Condition{.{ .field_key = condition_app_id, .value = .{ .kind = value_byte_blob, .data = .{ .blob = app_id } } }};
     try add(handle.engine, sub_layer_key, layer_connect_v4, 13, action_permit, filter_flag_clear_action_right, &permit_app);
     try add(handle.engine, sub_layer_key, layer_connect_v6, 13, action_permit, filter_flag_clear_action_right, &permit_app);
+    for (options.allow_apps) |app| permitApp(handle.engine, sub_layer_key, app) catch |err| {
+        log.warn("wfp: {s} keeps the strict filters: {s}", .{ app, @errorName(err) });
+    };
     if (!options.ipv6) try add(handle.engine, sub_layer_key, layer_connect_v6, 12, action_block, 0, &.{});
     const on_tun = [_]Condition{.{ .field_key = condition_local_interface_index, .value = .{ .kind = value_uint32, .data = .{ .uint32 = options.tun_index } } }};
     if (options.ipv4) try add(handle.engine, sub_layer_key, layer_connect_v4, 11, action_permit, 0, &on_tun);

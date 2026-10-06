@@ -81,6 +81,7 @@ pub const Document = struct {
         include_file: ?[]const u8 = null,
         exclude_file: ?[]const u8 = null,
         strict: ?bool = null,
+        allow_app: ?[]const []const u8 = null,
         auto_redirect: ?bool = null,
         redirect_port: ?u16 = null,
         include_uid: ?[]const []const u8 = null,
@@ -312,6 +313,7 @@ pub const State = struct {
             if (r.include_file) |f| try s.loadPrefixFile(arena, true, f);
             if (r.exclude_file) |f| try s.loadPrefixFile(arena, false, f);
             set(&c.route.strict, r.strict);
+            if (r.allow_app) |list| c.route.allow_apps = list;
             set(&c.route.auto_redirect, r.auto_redirect);
             set(&c.route.redirect_port, r.redirect_port);
             if (r.include_uid) |list| for (list) |text| {

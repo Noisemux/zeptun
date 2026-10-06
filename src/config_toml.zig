@@ -265,6 +265,8 @@ test "toml document reaches every section" {
         \\
         \\[route]
         \\auto_route = true
+        \\strict = true
+        \\allow_app = ['C:\Program Files\ZedSecure\xray.exe', "D:\\O'Brien\\zeptun.exe"]
         \\exclude = [
         \\  "192.168.0.0/16",
         \\]
@@ -284,6 +286,9 @@ test "toml document reaches every section" {
     try std.testing.expectEqualStrings("127.0.0.1:1080", doc.handler.?.socks5.?.server.?);
     try std.testing.expect(doc.route.?.auto_route.?);
     try std.testing.expectEqualStrings("192.168.0.0/16", doc.route.?.exclude.?[0]);
+    try std.testing.expect(doc.route.?.strict.?);
+    try std.testing.expectEqualStrings("C:\\Program Files\\ZedSecure\\xray.exe", doc.route.?.allow_app.?[0]);
+    try std.testing.expectEqualStrings("D:\\O'Brien\\zeptun.exe", doc.route.?.allow_app.?[1]);
     try std.testing.expect(doc.dns.?.fake_ip.?);
     try std.testing.expect(!doc.dns.?.systemd_resolved.?);
     try std.testing.expectEqual(@as(u32, 5), doc.stats_interval_s.?);

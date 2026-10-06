@@ -472,6 +472,7 @@ pub fn applyRoutes(cfg: *const config.Config, applied: *Applied) !void {
             .ipv4 = routed(cfg, applied, .v4),
             .ipv6 = routed(cfg, applied, .v6),
             .block_dns = cfg.dns.hijack,
+            .allow_apps = cfg.route.allow_apps,
         });
     }
 }
