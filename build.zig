@@ -97,7 +97,7 @@ fn featureOptions(b: *std.Build, f: Features) *std.Build.Step.Options {
     opts.addOption(bool, "enable_tracing", f.tracing);
     opts.addOption(u8, "max_log_level", f.max_log_level);
     opts.addOption(bool, "mobile", f.mobile);
-    opts.addOption([]const u8, "version", "1.1.1");
+    opts.addOption([]const u8, "version", "1.1.2");
     return opts;
 }
 
