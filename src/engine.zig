@@ -969,6 +969,10 @@ pub const Engine = struct {
 
     pub fn setDeviceFd(e: *Engine, fd: sys.fd_t) void {
         e.cfg.device.fd = @intCast(fd);
+        if (fd >= 0) {
+            e.cfg.device.kind = .fd;
+            e.device_kind = .fd;
+        }
     }
 
     pub fn workerAs(e: *Engine, comptime W: type, index: u16) *W {

@@ -422,3 +422,16 @@ test "ffi config roundtrip" {
     try std.testing.expect(zeptun_version() == 0x010101);
     try std.testing.expectEqualStrings("timeout", std.mem.span(zeptun_strerror(-15)));
 }
+
+test "a device fd set after a toml config switches the device kind" {
+    const toml = "[handler.socks5]\nserver = \"127.0.0.1:1080\"\n";
+    var handle: ?*anyopaque = null;
+    try std.testing.expectEqual(@as(c_int, 0), zeptun_create_from_toml(toml.ptr, toml.len, &handle));
+    defer zeptun_destroy(handle);
+    const h = handleOf(handle).?;
+    try std.testing.expectEqual(config.DeviceKind.tun, h.engine.device_kind);
+    try std.testing.expectEqual(@as(c_int, 0), zeptun_set_device_fd(handle, 7));
+    try std.testing.expectEqual(config.DeviceKind.fd, h.engine.device_kind);
+    try std.testing.expectEqual(config.DeviceKind.fd, h.engine.cfg.device.kind);
+    try std.testing.expectEqual(@as(i32, 7), h.engine.cfg.device.fd);
+}
