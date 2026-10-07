@@ -4,40 +4,40 @@
 <text x="16" y="42" font-size="12" fill="#64748b">worst scenario of each engine, read again after 5 s of idle &#183; lower is better</text>
 <text x="16" y="68" font-size="12" font-weight="600" fill="#334155">while forwarding</text>
 <text x="142" y="90" text-anchor="end" font-size="12" fill="#475569">zeptun-hybrid</text>
-<rect x="150" y="76" width="132" height="16" rx="3" fill="#2563eb"/>
-<text x="290" y="90" font-size="12" fill="#0f172a">28.37 MB</text>
+<rect x="150" y="76" width="139" height="16" rx="3" fill="#2563eb"/>
+<text x="297" y="90" font-size="12" fill="#0f172a">29.16 MB</text>
 <text x="142" y="114" text-anchor="end" font-size="12" fill="#475569">zeptun-userspace</text>
-<rect x="150" y="100" width="69" height="16" rx="3" fill="#64748b"/>
-<text x="227" y="114" font-size="12" fill="#0f172a">14.99 MB</text>
+<rect x="150" y="100" width="75" height="16" rx="3" fill="#64748b"/>
+<text x="233" y="114" font-size="12" fill="#0f172a">15.80 MB</text>
 <text x="142" y="138" text-anchor="end" font-size="12" fill="#475569">hev</text>
-<rect x="150" y="124" width="91" height="16" rx="3" fill="#0f766e"/>
-<text x="249" y="138" font-size="12" fill="#0f172a">19.59 MB</text>
+<rect x="150" y="124" width="86" height="16" rx="3" fill="#0f766e"/>
+<text x="244" y="138" font-size="12" fill="#0f172a">18.00 MB</text>
 <text x="142" y="162" text-anchor="end" font-size="12" fill="#475569">singbox-gvisor</text>
-<rect x="150" y="148" width="402" height="16" rx="3" fill="#b45309"/>
-<text x="560" y="162" font-size="12" fill="#0f172a">86.45 MB</text>
+<rect x="150" y="148" width="418" height="16" rx="3" fill="#b45309"/>
+<text x="576" y="162" font-size="12" fill="#0f172a">87.30 MB</text>
 <text x="142" y="186" text-anchor="end" font-size="12" fill="#475569">singbox-system</text>
-<rect x="150" y="172" width="351" height="16" rx="3" fill="#7c3aed"/>
-<text x="509" y="186" font-size="12" fill="#0f172a">75.42 MB</text>
+<rect x="150" y="172" width="356" height="16" rx="3" fill="#7c3aed"/>
+<text x="514" y="186" font-size="12" fill="#0f172a">74.21 MB</text>
 <text x="142" y="210" text-anchor="end" font-size="12" fill="#475569">tun2socks</text>
 <rect x="150" y="196" width="680" height="16" rx="3" fill="#be123c"/>
-<text x="838" y="210" font-size="12" fill="#0f172a">146 MB</text>
+<text x="838" y="210" font-size="12" fill="#0f172a">142 MB</text>
 <text x="16" y="250" font-size="12" font-weight="600" fill="#334155">after the load stops</text>
 <text x="142" y="272" text-anchor="end" font-size="12" fill="#475569">zeptun-hybrid</text>
-<rect x="150" y="258" width="129" height="16" rx="3" fill="#2563eb"/>
-<text x="287" y="272" font-size="12" fill="#0f172a">27.90 MB</text>
+<rect x="150" y="258" width="137" height="16" rx="3" fill="#2563eb"/>
+<text x="295" y="272" font-size="12" fill="#0f172a">28.66 MB</text>
 <text x="142" y="296" text-anchor="end" font-size="12" fill="#475569">zeptun-userspace</text>
-<rect x="150" y="282" width="65" height="16" rx="3" fill="#64748b"/>
-<text x="223" y="296" font-size="12" fill="#0f172a">14.07 MB</text>
+<rect x="150" y="282" width="70" height="16" rx="3" fill="#64748b"/>
+<text x="228" y="296" font-size="12" fill="#0f172a">14.76 MB</text>
 <text x="142" y="320" text-anchor="end" font-size="12" fill="#475569">hev</text>
-<rect x="150" y="306" width="91" height="16" rx="3" fill="#0f766e"/>
-<text x="249" y="320" font-size="12" fill="#0f172a">19.59 MB</text>
+<rect x="150" y="306" width="86" height="16" rx="3" fill="#0f766e"/>
+<text x="244" y="320" font-size="12" fill="#0f172a">18.00 MB</text>
 <text x="142" y="344" text-anchor="end" font-size="12" fill="#475569">singbox-gvisor</text>
-<rect x="150" y="330" width="397" height="16" rx="3" fill="#b45309"/>
-<text x="555" y="344" font-size="12" fill="#0f172a">85.43 MB</text>
+<rect x="150" y="330" width="418" height="16" rx="3" fill="#b45309"/>
+<text x="576" y="344" font-size="12" fill="#0f172a">87.30 MB</text>
 <text x="142" y="368" text-anchor="end" font-size="12" fill="#475569">singbox-system</text>
-<rect x="150" y="354" width="350" height="16" rx="3" fill="#7c3aed"/>
-<text x="508" y="368" font-size="12" fill="#0f172a">75.25 MB</text>
+<rect x="150" y="354" width="355" height="16" rx="3" fill="#7c3aed"/>
+<text x="513" y="368" font-size="12" fill="#0f172a">74.13 MB</text>
 <text x="142" y="392" text-anchor="end" font-size="12" fill="#475569">tun2socks</text>
-<rect x="150" y="378" width="625" height="16" rx="3" fill="#be123c"/>
-<text x="783" y="392" font-size="12" fill="#0f172a">134 MB</text>
+<rect x="150" y="378" width="608" height="16" rx="3" fill="#be123c"/>
+<text x="766" y="392" font-size="12" fill="#0f172a">127 MB</text>
 </svg>

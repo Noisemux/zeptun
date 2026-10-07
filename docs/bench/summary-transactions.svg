@@ -3,18 +3,18 @@
 <text x="12" y="20" font-size="13" font-weight="600" fill="#0f172a">Request/response, 8 connections</text>
 <text x="12" y="36" font-size="11" fill="#64748b">GitHub-hosted runner &#183; higher is better</text>
 <text x="120" y="58" text-anchor="end" font-size="11" fill="#475569">zeptun</text>
-<rect x="128" y="46" width="237" height="13" rx="2" fill="#2563eb"/>
-<text x="373" y="59" font-size="11" fill="#0f172a">50986 tps</text>
+<rect x="128" y="46" width="238" height="13" rx="2" fill="#2563eb"/>
+<text x="374" y="59" font-size="11" fill="#0f172a">32598 tps</text>
 <text x="120" y="78" text-anchor="end" font-size="11" fill="#475569">hev-socks5-tunnel</text>
-<rect x="128" y="66" width="203" height="13" rx="2" fill="#94a3b8"/>
-<text x="339" y="79" font-size="11" fill="#0f172a">43680 tps</text>
+<rect x="128" y="66" width="227" height="13" rx="2" fill="#94a3b8"/>
+<text x="363" y="79" font-size="11" fill="#0f172a">31182 tps</text>
 <text x="120" y="98" text-anchor="end" font-size="11" fill="#475569">sing-box system</text>
-<rect x="128" y="86" width="146" height="13" rx="2" fill="#94a3b8"/>
-<text x="282" y="99" font-size="11" fill="#0f172a">31399 tps</text>
+<rect x="128" y="86" width="159" height="13" rx="2" fill="#94a3b8"/>
+<text x="295" y="99" font-size="11" fill="#0f172a">21816 tps</text>
 <text x="120" y="118" text-anchor="end" font-size="11" fill="#475569">tun2socks</text>
-<rect x="128" y="106" width="131" height="13" rx="2" fill="#94a3b8"/>
-<text x="267" y="119" font-size="11" fill="#0f172a">28184 tps</text>
+<rect x="128" y="106" width="132" height="13" rx="2" fill="#94a3b8"/>
+<text x="268" y="119" font-size="11" fill="#0f172a">18092 tps</text>
 <text x="120" y="138" text-anchor="end" font-size="11" fill="#475569">sing-box gvisor</text>
-<rect x="128" y="126" width="126" height="13" rx="2" fill="#94a3b8"/>
-<text x="262" y="139" font-size="11" fill="#0f172a">27062 tps</text>
+<rect x="128" y="126" width="127" height="13" rx="2" fill="#94a3b8"/>
+<text x="263" y="139" font-size="11" fill="#0f172a">17417 tps</text>
 </svg>

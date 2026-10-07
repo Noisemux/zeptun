@@ -3,18 +3,18 @@
 <text x="12" y="20" font-size="13" font-weight="600" fill="#0f172a">CPU at the same load</text>
 <text x="12" y="36" font-size="11" fill="#64748b">GitHub-hosted runner &#183; lower is better</text>
 <text x="120" y="58" text-anchor="end" font-size="11" fill="#475569">zeptun</text>
-<rect x="128" y="46" width="117" height="13" rx="2" fill="#2563eb"/>
-<text x="253" y="59" font-size="11" fill="#0f172a">130 %</text>
+<rect x="128" y="46" width="118" height="13" rx="2" fill="#2563eb"/>
+<text x="254" y="59" font-size="11" fill="#0f172a">129 %</text>
 <text x="120" y="78" text-anchor="end" font-size="11" fill="#475569">sing-box system</text>
-<rect x="128" y="66" width="151" height="13" rx="2" fill="#94a3b8"/>
-<text x="287" y="79" font-size="11" fill="#0f172a">168 %</text>
+<rect x="128" y="66" width="157" height="13" rx="2" fill="#94a3b8"/>
+<text x="293" y="79" font-size="11" fill="#0f172a">171 %</text>
 <text x="120" y="98" text-anchor="end" font-size="11" fill="#475569">sing-box gvisor</text>
-<rect x="128" y="86" width="179" height="13" rx="2" fill="#94a3b8"/>
-<text x="315" y="99" font-size="11" fill="#0f172a">199 %</text>
+<rect x="128" y="86" width="180" height="13" rx="2" fill="#94a3b8"/>
+<text x="316" y="99" font-size="11" fill="#0f172a">197 %</text>
 <text x="120" y="118" text-anchor="end" font-size="11" fill="#475569">hev-socks5-tunnel</text>
-<rect x="128" y="106" width="196" height="13" rx="2" fill="#94a3b8"/>
-<text x="332" y="119" font-size="11" fill="#0f172a">217 %</text>
+<rect x="128" y="106" width="203" height="13" rx="2" fill="#94a3b8"/>
+<text x="339" y="119" font-size="11" fill="#0f172a">222 %</text>
 <text x="120" y="138" text-anchor="end" font-size="11" fill="#475569">tun2socks</text>
 <rect x="128" y="126" width="238" height="13" rx="2" fill="#94a3b8"/>
-<text x="374" y="139" font-size="11" fill="#0f172a">264 %</text>
+<text x="374" y="139" font-size="11" fill="#0f172a">259 %</text>
 </svg>
