@@ -1020,6 +1020,13 @@ pub const Engine = struct {
         return true;
     }
 
+    fn dropElastic(e: *Engine) void {
+        const el = e.elastic orelse return;
+        el.stat.close();
+        e.allocator.destroy(el);
+        e.elastic = null;
+    }
+
     fn initElastic(e: *Engine, cap: u16) !void {
         const el = try e.allocator.create(Elastic);
         el.* = .{ .mode = e.cfg.io.elastic, .cap = cap, .cpus = sys.cpuCount() };
@@ -1229,6 +1236,7 @@ pub const Engine = struct {
         e.worker_count = workers;
         e.worker_cap = @max(workers, cap);
         if (cap > workers) try e.initElastic(cap);
+        errdefer e.dropElastic();
         if (has_redirect and cfg.route.auto_redirect and cfg.device.kind == .tun) try e.openRedirectListeners(workers);
         e.backend = try e.resolveBackend();
         e.sizing = config.size(cfg, workers, e.caps.bufferSize(), e.caps.minBufferSize(), session_bytes);
@@ -1463,10 +1471,7 @@ pub const Engine = struct {
                 },
             }
         }
-        if (e.elastic) |el| {
-            el.stat.close();
-            e.allocator.destroy(el);
-        }
+        e.dropElastic();
         {
             var scope = e.netns.enter();
             defer scope.leave();
