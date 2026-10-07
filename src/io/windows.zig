@@ -287,6 +287,20 @@ pub const kernel32 = struct {
     pub extern "kernel32" fn GetExitCodeProcess(hProcess: HANDLE, lpExitCode: *u32) callconv(.winapi) BOOL;
 };
 
+pub const advapi32 = struct {
+    pub extern "advapi32" fn SystemFunction036(RandomBuffer: [*]u8, RandomBufferLength: u32) callconv(.winapi) u8;
+};
+
+pub fn randomBytes(buf: []u8) bool {
+    var i: usize = 0;
+    while (i < buf.len) {
+        const n: u32 = @intCast(@min(buf.len - i, std.math.maxInt(u32)));
+        if (advapi32.SystemFunction036(buf[i..].ptr, n) == 0) return false;
+        i += n;
+    }
+    return true;
+}
+
 pub const ws2_32 = struct {
     pub extern "ws2_32" fn WSAStartup(wVersionRequested: u16, lpWSAData: *anyopaque) callconv(.winapi) c_int;
     pub extern "ws2_32" fn WSACleanup() callconv(.winapi) c_int;

@@ -939,13 +939,12 @@ pub const Engine = struct {
     }
 
     fn fillRandom(buf: []u8) void {
-        if (sys.is_linux) {
-            _ = std.os.linux.getrandom(buf.ptr, buf.len, 0);
-        } else if (sys.is_darwin or sys.is_bsd) {
-            std.c.arc4random_buf(buf.ptr, buf.len);
-        } else {
-            const t = sys.monotonicNs();
-            for (buf, 0..) |*b, i| b.* = @truncate(t >> @intCast((i * 8) % 64));
+        if (sys.randomBytes(buf)) return;
+        var anchor: u8 = 0;
+        var state = std.hash.Wyhash.hash(sys.monotonicNs(), std.mem.asBytes(&@intFromPtr(&anchor)));
+        for (buf) |*b| {
+            state = std.hash.Wyhash.hash(state, std.mem.asBytes(&@intFromPtr(buf.ptr)));
+            b.* = @truncate(state);
         }
     }
 

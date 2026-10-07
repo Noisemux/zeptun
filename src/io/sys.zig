@@ -228,6 +228,28 @@ pub fn cpuCount() u32 {
     return @intCast(@max(1, @min(n, 1024)));
 }
 
+pub fn randomBytes(buf: []u8) bool {
+    if (buf.len == 0) return true;
+    if (is_linux) {
+        var i: usize = 0;
+        while (i < buf.len) {
+            const r = linux.getrandom(buf[i..].ptr, buf.len - i, 0);
+            switch (linux.errno(r)) {
+                .SUCCESS => i += r,
+                .INTR => continue,
+                else => return false,
+            }
+        }
+        return true;
+    }
+    if (is_darwin or is_bsd) {
+        c.arc4random_buf(buf.ptr, buf.len);
+        return true;
+    }
+    if (is_windows) return windows.randomBytes(buf);
+    return false;
+}
+
 pub fn pageSize() usize {
     return std.heap.pageSize();
 }
@@ -636,4 +658,13 @@ test "socket connect loopback" {
         if (n < 0) sleepMs(1);
     }
     try std.testing.expectEqual(@as(i32, 5), n);
+}
+
+test "random bytes come from the operating system" {
+    var a: [32]u8 = @splat(0);
+    var b: [32]u8 = @splat(0);
+    try std.testing.expect(randomBytes(&a));
+    try std.testing.expect(randomBytes(&b));
+    try std.testing.expect(!std.mem.eql(u8, &a, &b));
+    try std.testing.expect(!std.mem.allEqual(u8, &a, 0));
 }
