@@ -97,7 +97,7 @@ fn featureOptions(b: *std.Build, f: Features) *std.Build.Step.Options {
     opts.addOption(bool, "enable_tracing", f.tracing);
     opts.addOption(u8, "max_log_level", f.max_log_level);
     opts.addOption(bool, "mobile", f.mobile);
-    opts.addOption([]const u8, "version", "1.1.2");
+    opts.addOption([]const u8, "version", "1.1.3");
     return opts;
 }
 
@@ -177,7 +177,7 @@ fn makeArtifacts(b: *std.Build, target: std.Build.ResolvedTarget, optimize: std.
             .name = "zeptun",
             .root_module = shared_mod,
             .linkage = .dynamic,
-            .version = if (target.result.abi.isAndroid()) null else .{ .major = 1, .minor = 1, .patch = 1 },
+            .version = if (target.result.abi.isAndroid()) null else .{ .major = 1, .minor = 1, .patch = 3 },
         });
         if (target.result.os.tag == .linux) {
             lib.link_z_max_page_size = 16384;
