@@ -1247,6 +1247,9 @@ pub const Engine = struct {
         try e.createWorkers();
         e.setup_done = true;
         log.info("engine: {d} worker(s), elastic up to {d}, backend {t}, device mtu {d}, vnet_hdr={} tso={} uso={}", .{ workers, if (e.elastic != null) cap else workers, e.backend, e.caps.mtu, e.caps.vnet_hdr, e.caps.tso, e.caps.uso });
+        if (e.cfg.stack.icmp == .forward and e.cfg.handler.kind == .socks5) {
+            log.warn("icmp: forwarded echo requests leave from this host's own address, a socks5 proxy cannot carry them", .{});
+        }
     }
 
     const has_redirect = build_options.enable_system_stack and sys.is_linux and !sys.is_android;

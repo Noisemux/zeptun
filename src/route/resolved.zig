@@ -95,7 +95,10 @@ pub fn apply(cfg: *const config.Config, ifname: []const u8) bool {
         }
     }
     if (n == 2) return false;
-    if (!run(exe, args[0..n])) return false;
+    if (!run(exe, args[0..n])) {
+        log.warn("route: handing DNS to systemd-resolved failed, queries to 127.0.0.53 keep going to its own upstream servers", .{});
+        return false;
+    }
     _ = run(exe, &.{ "domain", &name, "~." });
     _ = run(exe, &.{ "default-route", &name, "true" });
     log.info("route: systemd-resolved now sends every domain to {s}", .{ifname});
