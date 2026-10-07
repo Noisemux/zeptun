@@ -697,7 +697,11 @@ pub fn Handler(comptime W: type) type {
                 h.dropWarm(w, s, true);
                 return .disarm;
             };
-            h.protect.apply(ufd, relay.addr.family) catch {};
+            h.protect.apply(ufd, relay.addr.family) catch {
+                sys.close(ufd);
+                h.dropWarm(w, s, true);
+                return .disarm;
+            };
             s.relay = sys.Sockaddr.fromEndpoint(relay);
             if (sys.connect(ufd, &s.relay) < 0) {
                 sys.close(ufd);
@@ -1108,7 +1112,12 @@ pub fn Handler(comptime W: type) type {
                 W.onUdpClosed(w, s);
                 return;
             };
-            h.protect.apply(fd, relay.addr.family) catch {};
+            h.protect.apply(fd, relay.addr.family) catch {
+                sys.close(fd);
+                h.dropPending(w, s);
+                W.onUdpClosed(w, s);
+                return;
+            };
             direct.setDscp(fd, relay.addr.family, s.tos);
             s.gro = direct.tuneUdp(fd);
             const relay_sa = sys.Sockaddr.fromEndpoint(relay);
