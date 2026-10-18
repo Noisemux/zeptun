@@ -4,59 +4,59 @@
 <text x="16" y="42" font-size="12" fill="#64748b">median of the repeats &#183; lower is better</text>
 <text x="16" y="68" font-size="12" font-weight="600" fill="#334155">rr</text>
 <text x="142" y="90" text-anchor="end" font-size="12" fill="#475569">zeptun-hybrid</text>
-<rect x="150" y="76" width="124" height="16" rx="3" fill="#2563eb"/>
-<text x="282" y="90" font-size="12" fill="#0f172a">191 us</text>
+<rect x="150" y="76" width="122" height="16" rx="3" fill="#2563eb"/>
+<text x="280" y="90" font-size="12" fill="#0f172a">185 us</text>
 <text x="142" y="114" text-anchor="end" font-size="12" fill="#475569">zeptun-userspace</text>
-<rect x="150" y="100" width="112" height="16" rx="3" fill="#64748b"/>
-<text x="270" y="114" font-size="12" fill="#0f172a">172 us</text>
+<rect x="150" y="100" width="113" height="16" rx="3" fill="#64748b"/>
+<text x="271" y="114" font-size="12" fill="#0f172a">171 us</text>
 <text x="142" y="138" text-anchor="end" font-size="12" fill="#475569">hev</text>
-<rect x="150" y="124" width="112" height="16" rx="3" fill="#0f766e"/>
-<text x="270" y="138" font-size="12" fill="#0f172a">172 us</text>
+<rect x="150" y="124" width="116" height="16" rx="3" fill="#0f766e"/>
+<text x="274" y="138" font-size="12" fill="#0f172a">175 us</text>
 <text x="142" y="162" text-anchor="end" font-size="12" fill="#475569">singbox-gvisor</text>
-<rect x="150" y="148" width="207" height="16" rx="3" fill="#b45309"/>
-<text x="365" y="162" font-size="12" fill="#0f172a">318 us</text>
+<rect x="150" y="148" width="200" height="16" rx="3" fill="#b45309"/>
+<text x="358" y="162" font-size="12" fill="#0f172a">302 us</text>
 <text x="142" y="186" text-anchor="end" font-size="12" fill="#475569">singbox-system</text>
 <rect x="150" y="172" width="135" height="16" rx="3" fill="#7c3aed"/>
-<text x="293" y="186" font-size="12" fill="#0f172a">207 us</text>
+<text x="293" y="186" font-size="12" fill="#0f172a">204 us</text>
 <text x="142" y="210" text-anchor="end" font-size="12" fill="#475569">tun2socks</text>
-<rect x="150" y="196" width="167" height="16" rx="3" fill="#be123c"/>
-<text x="325" y="210" font-size="12" fill="#0f172a">256 us</text>
+<rect x="150" y="196" width="164" height="16" rx="3" fill="#be123c"/>
+<text x="322" y="210" font-size="12" fill="#0f172a">248 us</text>
 <text x="16" y="250" font-size="12" font-weight="600" fill="#334155">rr-8x1k</text>
 <text x="142" y="272" text-anchor="end" font-size="12" fill="#475569">zeptun-hybrid</text>
-<rect x="150" y="258" width="350" height="16" rx="3" fill="#2563eb"/>
-<text x="508" y="272" font-size="12" fill="#0f172a">536 us</text>
+<rect x="150" y="258" width="347" height="16" rx="3" fill="#2563eb"/>
+<text x="505" y="272" font-size="12" fill="#0f172a">524 us</text>
 <text x="142" y="296" text-anchor="end" font-size="12" fill="#475569">zeptun-userspace</text>
-<rect x="150" y="282" width="283" height="16" rx="3" fill="#64748b"/>
-<text x="441" y="296" font-size="12" fill="#0f172a">434 us</text>
+<rect x="150" y="282" width="302" height="16" rx="3" fill="#64748b"/>
+<text x="460" y="296" font-size="12" fill="#0f172a">456 us</text>
 <text x="142" y="320" text-anchor="end" font-size="12" fill="#475569">hev</text>
-<rect x="150" y="306" width="320" height="16" rx="3" fill="#0f766e"/>
-<text x="478" y="320" font-size="12" fill="#0f172a">490 us</text>
+<rect x="150" y="306" width="385" height="16" rx="3" fill="#0f766e"/>
+<text x="543" y="320" font-size="12" fill="#0f172a">580 us</text>
 <text x="142" y="344" text-anchor="end" font-size="12" fill="#475569">singbox-gvisor</text>
-<rect x="150" y="330" width="551" height="16" rx="3" fill="#b45309"/>
-<text x="709" y="344" font-size="12" fill="#0f172a">844 us</text>
+<rect x="150" y="330" width="547" height="16" rx="3" fill="#b45309"/>
+<text x="705" y="344" font-size="12" fill="#0f172a">824 us</text>
 <text x="142" y="368" text-anchor="end" font-size="12" fill="#475569">singbox-system</text>
-<rect x="150" y="354" width="452" height="16" rx="3" fill="#7c3aed"/>
-<text x="610" y="368" font-size="12" fill="#0f172a">692 us</text>
+<rect x="150" y="354" width="464" height="16" rx="3" fill="#7c3aed"/>
+<text x="622" y="368" font-size="12" fill="#0f172a">700 us</text>
 <text x="142" y="392" text-anchor="end" font-size="12" fill="#475569">tun2socks</text>
-<rect x="150" y="378" width="551" height="16" rx="3" fill="#be123c"/>
-<text x="709" y="392" font-size="12" fill="#0f172a">844 us</text>
+<rect x="150" y="378" width="549" height="16" rx="3" fill="#be123c"/>
+<text x="707" y="392" font-size="12" fill="#0f172a">828 us</text>
 <text x="16" y="432" font-size="12" font-weight="600" fill="#334155">crr</text>
 <text x="142" y="454" text-anchor="end" font-size="12" fill="#475569">zeptun-hybrid</text>
-<rect x="150" y="440" width="489" height="16" rx="3" fill="#2563eb"/>
-<text x="647" y="454" font-size="12" fill="#0f172a">748 us</text>
+<rect x="150" y="440" width="486" height="16" rx="3" fill="#2563eb"/>
+<text x="644" y="454" font-size="12" fill="#0f172a">732 us</text>
 <text x="142" y="478" text-anchor="end" font-size="12" fill="#475569">zeptun-userspace</text>
-<rect x="150" y="464" width="387" height="16" rx="3" fill="#64748b"/>
-<text x="545" y="478" font-size="12" fill="#0f172a">592 us</text>
+<rect x="150" y="464" width="382" height="16" rx="3" fill="#64748b"/>
+<text x="540" y="478" font-size="12" fill="#0f172a">576 us</text>
 <text x="142" y="502" text-anchor="end" font-size="12" fill="#475569">hev</text>
-<rect x="150" y="488" width="428" height="16" rx="3" fill="#0f766e"/>
-<text x="586" y="502" font-size="12" fill="#0f172a">656 us</text>
+<rect x="150" y="488" width="411" height="16" rx="3" fill="#0f766e"/>
+<text x="569" y="502" font-size="12" fill="#0f172a">620 us</text>
 <text x="142" y="526" text-anchor="end" font-size="12" fill="#475569">singbox-gvisor</text>
-<rect x="150" y="512" width="680" height="16" rx="3" fill="#b45309"/>
-<text x="838" y="526" font-size="12" fill="#0f172a">1040 us</text>
+<rect x="150" y="512" width="672" height="16" rx="3" fill="#b45309"/>
+<text x="830" y="526" font-size="12" fill="#0f172a">1012 us</text>
 <text x="142" y="550" text-anchor="end" font-size="12" fill="#475569">singbox-system</text>
-<rect x="150" y="536" width="578" height="16" rx="3" fill="#7c3aed"/>
-<text x="736" y="550" font-size="12" fill="#0f172a">884 us</text>
+<rect x="150" y="536" width="576" height="16" rx="3" fill="#7c3aed"/>
+<text x="734" y="550" font-size="12" fill="#0f172a">868 us</text>
 <text x="142" y="574" text-anchor="end" font-size="12" fill="#475569">tun2socks</text>
 <rect x="150" y="560" width="680" height="16" rx="3" fill="#be123c"/>
-<text x="838" y="574" font-size="12" fill="#0f172a">1040 us</text>
+<text x="838" y="574" font-size="12" fill="#0f172a">1024 us</text>
 </svg>

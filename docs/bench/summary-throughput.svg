@@ -3,18 +3,18 @@
 <text x="12" y="20" font-size="13" font-weight="600" fill="#0f172a">Throughput, 10 streams through SOCKS5</text>
 <text x="12" y="36" font-size="11" fill="#64748b">GitHub-hosted runner &#183; higher is better</text>
 <text x="120" y="58" text-anchor="end" font-size="11" fill="#475569">zeptun</text>
-<rect x="128" y="46" width="238" height="13" rx="2" fill="#2563eb"/>
-<text x="374" y="59" font-size="11" fill="#0f172a">22.3 Gbit/s</text>
-<text x="120" y="78" text-anchor="end" font-size="11" fill="#475569">sing-box gvisor</text>
-<rect x="128" y="66" width="156" height="13" rx="2" fill="#94a3b8"/>
-<text x="292" y="79" font-size="11" fill="#0f172a">14.7 Gbit/s</text>
-<text x="120" y="98" text-anchor="end" font-size="11" fill="#475569">hev-socks5-tunnel</text>
-<rect x="128" y="86" width="138" height="13" rx="2" fill="#94a3b8"/>
-<text x="274" y="99" font-size="11" fill="#0f172a">13.0 Gbit/s</text>
+<rect x="128" y="46" width="237" height="13" rx="2" fill="#2563eb"/>
+<text x="373" y="59" font-size="11" fill="#0f172a">22.2 Gbit/s</text>
+<text x="120" y="78" text-anchor="end" font-size="11" fill="#475569">hev-socks5-tunnel</text>
+<rect x="128" y="66" width="216" height="13" rx="2" fill="#94a3b8"/>
+<text x="352" y="79" font-size="11" fill="#0f172a">20.2 Gbit/s</text>
+<text x="120" y="98" text-anchor="end" font-size="11" fill="#475569">sing-box gvisor</text>
+<rect x="128" y="86" width="160" height="13" rx="2" fill="#94a3b8"/>
+<text x="296" y="99" font-size="11" fill="#0f172a">15.0 Gbit/s</text>
 <text x="120" y="118" text-anchor="end" font-size="11" fill="#475569">tun2socks</text>
 <rect x="128" y="106" width="82" height="13" rx="2" fill="#94a3b8"/>
-<text x="218" y="119" font-size="11" fill="#0f172a">7.8 Gbit/s</text>
+<text x="218" y="119" font-size="11" fill="#0f172a">7.7 Gbit/s</text>
 <text x="120" y="138" text-anchor="end" font-size="11" fill="#475569">sing-box system</text>
 <rect x="128" y="126" width="48" height="13" rx="2" fill="#94a3b8"/>
-<text x="184" y="139" font-size="11" fill="#0f172a">4.6 Gbit/s</text>
+<text x="184" y="139" font-size="11" fill="#0f172a">4.5 Gbit/s</text>
 </svg>

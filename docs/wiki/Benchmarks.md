@@ -6,13 +6,13 @@ Every number here is produced by the `benchmark` workflow in the repository, on 
 
 | property | value |
 |---|---|
-| runner image | ubuntu24 20261004.327.1 |
+| runner image | ubuntu24 20261012.334.1 |
 | cpu | AMD EPYC 7763 64-Core Processor |
 | cpu cores | 4 |
 | memory | 15.6 GB |
 | kernel | Linux 6.17.0-1022-azure |
 | zig | 0.16.0 |
-| date | 2026-10-11 |
+| date | 2026-10-18 |
 
 ## Method
 
@@ -62,66 +62,66 @@ engine hands the memory back or keeps it for the life of the process.
 
 | engine | scenario | median | cpu % | max rss MB | rss after idle MB |
 |---|---|---:|---:|---:|---:|
-| zeptun-userspace | tcp-up-1 | 18.775 Gbit/s | 83 | 8.9 | 7.4 |
-| zeptun-userspace | tcp-up-10 | 22.605 Gbit/s | 137 | 17.4 | 10.4 |
-| zeptun-userspace | tcp-down-1 | 11.400 Gbit/s | 99 | 12.2 | 12.1 |
-| zeptun-userspace | tcp-down-10 | 19.661 Gbit/s | 178 | 15.9 | 12.4 |
-| zeptun-userspace | rr | 7170 tps p50=134us p99=172us p99.9=194us  | 36 | 12.5 | 12.5 |
-| zeptun-userspace | rr-8x1k | 33289 tps p50=230us p99=440us p99.9=560us  | 102 | 12.6 | 12.5 |
-| zeptun-userspace | crr | 1903 tps p50=508us p99=592us p99.9=720us  | 45 | 13.6 | 13.6 |
-| zeptun-userspace | udp-100k | 80268 echo pps (80.3% of 99992 sent)  | 74 | 15.1 | 14.3 |
-| zeptun-userspace | udp-gso-100k | 79367 echo pps (79.4% of 99996 sent)  | 54 | 17.2 | 16.2 |
-| hev | tcp-up-1 | 5.997 Gbit/s | 96 | 14.6 | 14.6 |
-| hev | tcp-up-10 | 13.394 Gbit/s | 219 | 15.4 | 15.1 |
-| hev | tcp-down-1 | 6.721 Gbit/s | 99 | 15.2 | 15.1 |
-| hev | tcp-down-10 | 11.112 Gbit/s | 210 | 15.8 | 15.1 |
-| hev | rr | 7160 tps p50=136us p99=172us p99.9=348us  | 39 | 15.1 | 15.1 |
-| hev | rr-8x1k | 32082 tps p50=238us p99=480us p99.9=600us  | 128 | 15.3 | 15.1 |
-| hev | crr | 1749 tps p50=552us p99=664us p99.9=776us  | 59 | 15.2 | 15.1 |
-| hev | udp-100k | 74921 echo pps (74.9% of 99988 sent)  | 99 | 17.8 | 17.8 |
-| hev | udp-gso-100k | 74967 echo pps (75.0% of 99988 sent)  | 99 | 20.6 | 20.6 |
-| zeptun-hybrid | tcp-up-1 | 12.016 Gbit/s | 99 | 7.9 | 7.7 |
-| zeptun-hybrid | tcp-up-10 | 19.994 Gbit/s | 186 | 15.4 | 14.5 |
-| zeptun-hybrid | tcp-down-1 | 12.668 Gbit/s | 100 | 14.8 | 14.4 |
-| zeptun-hybrid | tcp-down-10 | 22.394 Gbit/s | 199 | 15.5 | 14.6 |
-| zeptun-hybrid | rr | 6346 tps p50=152us p99=194us p99.9=428us  | 41 | 14.6 | 14.4 |
-| zeptun-hybrid | rr-8x1k | 30570 tps p50=242us p99=528us p99.9=640us  | 146 | 14.5 | 18.0 |
-| zeptun-hybrid | crr | 1544 tps p50=632us p99=752us p99.9=888us  | 68 | 19.4 | 20.6 |
-| zeptun-hybrid | udp-100k | 80814 echo pps (80.8% of 99988 sent)  | 97 | 26.6 | 26.3 |
-| zeptun-hybrid | udp-gso-100k | 79446 echo pps (79.4% of 99996 sent)  | 55 | 30.8 | 30.3 |
-| singbox-system | tcp-up-1 | 6.217 Gbit/s | 140 | 61.7 | 61.7 |
-| singbox-system | tcp-up-10 | 4.611 Gbit/s | 171 | 63.7 | 63.7 |
-| singbox-system | tcp-down-1 | 5.380 Gbit/s | 152 | 63.7 | 63.5 |
-| singbox-system | tcp-down-10 | 3.849 Gbit/s | 138 | 63.7 | 63.7 |
-| singbox-system | rr | 5620 tps p50=172us p99=206us p99.9=234us  | 61 | 63.7 | 63.7 |
-| singbox-system | rr-8x1k | 22166 tps p50=344us p99=688us p99.9=936us  | 155 | 63.7 | 63.4 |
-| singbox-system | crr | 1282 tps p50=760us p99=880us p99.9=1472us  | 100 | 72.5 | 72.5 |
-| singbox-system | udp-100k | 0 echo pps (0.0% of 99992 sent)  | 86 | 75.1 | 75.1 |
-| singbox-system | udp-gso-100k | 0 echo pps (0.0% of 99988 sent)  | 76 | 75.1 | 75.0 |
-| tun2socks | tcp-up-1 | 5.125 Gbit/s | 174 | 21.2 | 21.0 |
-| tun2socks | tcp-up-10 | 7.874 Gbit/s | 260 | 38.5 | 38.2 |
-| tun2socks | tcp-down-1 | 2.609 Gbit/s | 171 | 40.5 | 27.6 |
-| tun2socks | tcp-down-10 | 6.293 Gbit/s | 263 | 129.6 | 129.9 |
-| tun2socks | rr | 4613 tps p50=214us p99=256us p99.9=640us  | 73 | 130.0 | 130.0 |
-| tun2socks | rr-8x1k | 18382 tps p50=416us p99=840us p99.9=1168us  | 168 | 142.7 | 142.7 |
-| tun2socks | crr | 1182 tps p50=816us p99=1040us p99.9=2432us  | 91 | 144.4 | 47.5 |
-| tun2socks | udp-100k | 39921 echo pps (39.9% of 99984 sent)  | 217 | 49.2 | 55.8 |
-| tun2socks | udp-gso-100k | 43447 echo pps (43.4% of 99996 sent)  | 232 | 56.0 | 64.9 |
-| singbox-gvisor | tcp-up-1 | 9.222 Gbit/s | 159 | 69.6 | 69.6 |
-| singbox-gvisor | tcp-up-10 | 14.769 Gbit/s | 199 | 80.9 | 80.9 |
-| singbox-gvisor | tcp-down-1 | 3.178 Gbit/s | 183 | 81.0 | 82.0 |
-| singbox-gvisor | tcp-down-10 | 5.755 Gbit/s | 249 | 89.4 | 88.9 |
-| singbox-gvisor | rr | 4378 tps p50=226us p99=324us p99.9=560us  | 80 | 88.9 | 73.0 |
-| singbox-gvisor | rr-8x1k | 17484 tps p50=440us p99=856us p99.9=1344us  | 169 | 74.9 | 74.5 |
-| singbox-gvisor | crr | 1146 tps p50=848us p99=1040us p99.9=1856us  | 104 | 77.9 | 77.9 |
-| singbox-gvisor | udp-100k | 0 echo pps (0.0% of 99995 sent)  | 168 | 79.0 | 78.3 |
-| singbox-gvisor | udp-gso-100k | 0  | 0 | 78.3 | 78.3 |
+| zeptun-userspace | tcp-up-1 | 18.267 Gbit/s | 83 | 6.9 | 5.4 |
+| zeptun-userspace | tcp-up-10 | 22.290 Gbit/s | 134 | 15.1 | 8.4 |
+| zeptun-userspace | tcp-down-1 | 11.806 Gbit/s | 99 | 8.5 | 8.4 |
+| zeptun-userspace | tcp-down-10 | 20.006 Gbit/s | 174 | 12.1 | 8.5 |
+| zeptun-userspace | rr | 7154 tps p50=136us p99=168us p99.9=182us  | 36 | 8.6 | 8.5 |
+| zeptun-userspace | rr-8x1k | 33137 tps p50=232us p99=448us p99.9=568us  | 100 | 8.7 | 8.6 |
+| zeptun-userspace | crr | 1942 tps p50=500us p99=576us p99.9=648us  | 46 | 10.5 | 10.4 |
+| zeptun-userspace | udp-100k | 97816 echo pps (97.8% of 99996 sent)  | 64 | 13.0 | 12.4 |
+| zeptun-userspace | udp-gso-100k | 99810 echo pps (99.8% of 100000 sent)  | 47 | 13.2 | 12.3 |
+| hev | tcp-up-1 | 12.088 Gbit/s | 95 | 8.1 | 7.9 |
+| hev | tcp-up-10 | 20.962 Gbit/s | 172 | 10.0 | 8.3 |
+| hev | tcp-down-1 | 12.102 Gbit/s | 98 | 8.4 | 8.3 |
+| hev | tcp-down-10 | 21.206 Gbit/s | 190 | 9.0 | 8.3 |
+| hev | rr | 7092 tps p50=134us p99=174us p99.9=190us  | 39 | 8.3 | 8.3 |
+| hev | rr-8x1k | 31793 tps p50=228us p99=560us p99.9=696us  | 130 | 8.4 | 8.3 |
+| hev | crr | 1799 tps p50=536us p99=632us p99.9=736us  | 60 | 8.3 | 8.3 |
+| hev | udp-100k | 97578 echo pps (97.6% of 99988 sent)  | 78 | 8.8 | 8.8 |
+| hev | udp-gso-100k | 98067 echo pps (98.1% of 99992 sent)  | 74 | 9.2 | 9.2 |
+| zeptun-hybrid | tcp-up-1 | 11.589 Gbit/s | 99 | 6.0 | 5.8 |
+| zeptun-hybrid | tcp-up-10 | 20.274 Gbit/s | 188 | 11.6 | 10.6 |
+| zeptun-hybrid | tcp-down-1 | 12.766 Gbit/s | 99 | 10.9 | 10.4 |
+| zeptun-hybrid | tcp-down-10 | 21.723 Gbit/s | 196 | 11.6 | 10.7 |
+| zeptun-hybrid | rr | 6655 tps p50=144us p99=184us p99.9=204us  | 40 | 12.5 | 14.2 |
+| zeptun-hybrid | rr-8x1k | 29260 tps p50=256us p99=536us p99.9=672us  | 138 | 18.2 | 17.9 |
+| zeptun-hybrid | crr | 1577 tps p50=616us p99=728us p99.9=784us  | 69 | 23.5 | 23.3 |
+| zeptun-hybrid | udp-100k | 98940 echo pps (98.9% of 99992 sent)  | 86 | 27.9 | 29.7 |
+| zeptun-hybrid | udp-gso-100k | 99702 echo pps (99.7% of 99988 sent)  | 46 | 32.6 | 32.6 |
+| singbox-system | tcp-up-1 | 6.227 Gbit/s | 144 | 62.4 | 62.0 |
+| singbox-system | tcp-up-10 | 4.574 Gbit/s | 172 | 62.7 | 62.7 |
+| singbox-system | tcp-down-1 | 5.304 Gbit/s | 151 | 62.7 | 62.3 |
+| singbox-system | tcp-down-10 | 3.871 Gbit/s | 138 | 62.8 | 62.8 |
+| singbox-system | rr | 5652 tps p50=174us p99=204us p99.9=228us  | 61 | 62.8 | 62.8 |
+| singbox-system | rr-8x1k | 21989 tps p50=344us p99=696us p99.9=1000us  | 155 | 64.6 | 64.6 |
+| singbox-system | crr | 1294 tps p50=760us p99=864us p99.9=1344us  | 101 | 73.5 | 73.5 |
+| singbox-system | udp-100k | 0 echo pps (0.0% of 99992 sent)  | 86 | 75.7 | 75.3 |
+| singbox-system | udp-gso-100k | 0 echo pps (0.0% of 99988 sent)  | 76 | 75.3 | 74.8 |
+| tun2socks | tcp-up-1 | 5.078 Gbit/s | 174 | 19.4 | 18.7 |
+| tun2socks | tcp-up-10 | 7.841 Gbit/s | 259 | 38.5 | 38.1 |
+| tun2socks | tcp-down-1 | 2.629 Gbit/s | 171 | 40.6 | 25.8 |
+| tun2socks | tcp-down-10 | 6.274 Gbit/s | 263 | 123.7 | 123.7 |
+| tun2socks | rr | 4630 tps p50=216us p99=248us p99.9=324us  | 72 | 123.7 | 123.7 |
+| tun2socks | rr-8x1k | 18582 tps p50=408us p99=832us p99.9=1104us  | 167 | 134.5 | 134.5 |
+| tun2socks | crr | 1201 tps p50=800us p99=1024us p99.9=2208us  | 92 | 134.8 | 46.1 |
+| tun2socks | udp-100k | 42962 echo pps (43.0% of 99984 sent)  | 224 | 45.9 | 53.5 |
+| tun2socks | udp-gso-100k | 45524 echo pps (45.5% of 99996 sent)  | 235 | 64.6 | 61.8 |
+| singbox-gvisor | tcp-up-1 | 9.195 Gbit/s | 161 | 70.7 | 70.7 |
+| singbox-gvisor | tcp-up-10 | 15.103 Gbit/s | 199 | 82.0 | 82.0 |
+| singbox-gvisor | tcp-down-1 | 3.233 Gbit/s | 183 | 82.1 | 82.1 |
+| singbox-gvisor | tcp-down-10 | 5.821 Gbit/s | 249 | 88.2 | 87.3 |
+| singbox-gvisor | rr | 4431 tps p50=224us p99=280us p99.9=348us  | 80 | 87.3 | 85.1 |
+| singbox-gvisor | rr-8x1k | 17579 tps p50=440us p99=824us p99.9=1168us  | 169 | 74.6 | 73.3 |
+| singbox-gvisor | crr | 1162 tps p50=840us p99=1008us p99.9=1808us  | 103 | 76.9 | 76.9 |
+| singbox-gvisor | udp-100k | 0 echo pps (0.0% of 99991 sent)  | 169 | 77.4 | 77.1 |
+| singbox-gvisor | udp-gso-100k | 0  | 0 | 77.1 | 77.1 |
 
-zeptun: startup 4 ms, idle 2876 KB, 5 wakeups in 20 s | tcp 1000: 6128 KB (conns: 1000/1000 established, 0 failed, 1891 conn/s) | udp 1000: 8264 KB (udp flows: 1000/1000 answered, 6422 flows/s)
-hev: startup 3 ms, idle 2221 KB, 2 wakeups in 20 s | tcp 1000: 14774 KB (conns: 1000/1000 established, 0 failed, 1888 conn/s) | udp 1000: 19314 KB (udp flows: 1000/1000 answered, 7418 flows/s)
-singbox-system: startup 51 ms, idle 57489 KB, 6 wakeups in 20 s | tcp 1000: 73608 KB (conns: 1000/1000 established, 0 failed, 1301 conn/s) | udp 1000: 68740 KB (udp flows: 0/1000 answered, 0 flows/s)
-singbox-gvisor: startup 42 ms, idle 60853 KB, 122 wakeups in 20 s | tcp 1000: 94980 KB (conns: 1000/1000 established, 0 failed, 1246 conn/s) | udp 1000: 96724 KB (udp flows: 0/1000 answered, 0 flows/s)
-tun2socks: startup 5 ms, idle 15836 KB, 201 wakeups in 20 s | tcp 1000: 109324 KB (conns: 1000/1000 established, 0 failed, 1213 conn/s) | udp 1000: 185852 KB (udp flows: 1000/1000 answered, 5762 flows/s)
+zeptun: startup 3 ms, idle 844 KB, 5 wakeups in 20 s | tcp 1000: 4048 KB (conns: 1000/1000 established, 0 failed, 1898 conn/s) | udp 1000: 8248 KB (udp flows: 1000/1000 answered, 8241 flows/s)
+hev: startup 3 ms, idle 525 KB, 2 wakeups in 20 s | tcp 1000: 9286 KB (conns: 1000/1000 established, 0 failed, 1931 conn/s) | udp 1000: 9218 KB (udp flows: 1000/1000 answered, 7472 flows/s)
+singbox-system: startup 49 ms, idle 58189 KB, 6 wakeups in 20 s | tcp 1000: 73440 KB (conns: 1000/1000 established, 0 failed, 1350 conn/s) | udp 1000: 69664 KB (udp flows: 0/1000 answered, 0 flows/s)
+singbox-gvisor: startup 50 ms, idle 58245 KB, 122 wakeups in 20 s | tcp 1000: 94576 KB (conns: 1000/1000 established, 0 failed, 1270 conn/s) | udp 1000: 103720 KB (udp flows: 0/1000 answered, 0 flows/s)
+tun2socks: startup 5 ms, idle 13784 KB, 256 wakeups in 20 s | tcp 1000: 109316 KB (conns: 1000/1000 established, 0 failed, 1208 conn/s) | udp 1000: 183732 KB (udp flows: 1000/1000 answered, 6000 flows/s)
 
 ## Reproducing
 
