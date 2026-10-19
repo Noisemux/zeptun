@@ -446,7 +446,7 @@ test "fake dns evicts least recently used names" {
     var names: [20][16]u8 = undefined;
     var maps: [20]Mapping = undefined;
     for (0..20) |i| {
-        const s = try std.fmt.bufPrint(&names[i], "host{d}.test", .{i});
+        const s = try std.mem.print(&names[i], "host{d}.test", .{i});
         maps[i] = t.resolve(s).?;
         if (i == 5) _ = t.resolve("host0.test").?;
     }
@@ -458,7 +458,7 @@ test "fake dns evicts least recently used names" {
     try std.testing.expectEqual(maps[19].index, again.index);
     var seen: usize = 0;
     for (0..20) |i| {
-        const s = try std.fmt.bufPrint(&names[i], "host{d}.test", .{i});
+        const s = try std.mem.print(&names[i], "host{d}.test", .{i});
         if (t.findSlot(s, Table.hashName(s)) != null) seen += 1;
     }
     try std.testing.expectEqual(@as(usize, 16), seen);

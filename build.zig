@@ -139,7 +139,7 @@ fn ffiLinksLibc(t: std.Target, android_libc: ?[]const u8) bool {
 
 var android_libc_file: ?[]const u8 = null;
 
-fn makeArtifacts(b: *std.Build, target: std.Build.ResolvedTarget, optimize: std.builtin.OptimizeMode, o: Overrides, strip: ?bool) Artifacts {
+fn makeArtifacts(b: *std.Build, target: std.Build.ResolvedTarget, optimize: std.lang.Optimize, o: Overrides, strip: ?bool) Artifacts {
     const features = resolveFeatures(o, target.result);
     const lib_libc = ffiLinksLibc(target.result, android_libc_file);
     const engine = b.createModule(.{
@@ -161,7 +161,7 @@ fn makeArtifacts(b: *std.Build, target: std.Build.ResolvedTarget, optimize: std.
     });
     ffi.addImport("zeptun", engine);
     const static_lib = b.addLibrary(.{ .name = if (target.result.abi == .msvc) "zeptun_static" else "zeptun", .root_module = ffi, .linkage = .static });
-    if (target.result.abi.isAndroid() and lib_libc) static_lib.setLibCFile(.{ .cwd_relative = android_libc_file.? });
+    if (target.result.abi.isAndroid() and lib_libc) static_lib.setLibCFile(b.graph.cwdRelativePath(android_libc_file.?));
     var shared_lib: ?*std.Build.Step.Compile = null;
     if (supportsShared(target.result)) {
         const shared_mod = b.createModule(.{
@@ -183,7 +183,7 @@ fn makeArtifacts(b: *std.Build, target: std.Build.ResolvedTarget, optimize: std.
             lib.link_z_max_page_size = 16384;
             lib.link_z_common_page_size = 16384;
         }
-        if (target.result.abi.isAndroid() and lib_libc) lib.setLibCFile(.{ .cwd_relative = android_libc_file.? });
+        if (target.result.abi.isAndroid() and lib_libc) lib.setLibCFile(b.graph.cwdRelativePath(android_libc_file.?));
         shared_lib = lib;
     }
     return .{ .engine = engine, .ffi = ffi, .static_lib = static_lib, .shared_lib = shared_lib };
@@ -253,7 +253,7 @@ pub fn build(b: *std.Build) void {
         b.installArtifact(cli);
         const run_cli = b.addRunArtifact(cli);
         run_cli.step.dependOn(b.getInstallStep());
-        if (b.args) |a| run_cli.addArgs(a);
+        run_cli.addPassthruArgs();
         b.step("run", "Run the zeptun CLI").dependOn(&run_cli.step);
 
         const test_filters = b.option([]const []const u8, "test-filter", "Filter unit tests") orelse &.{};
@@ -280,13 +280,13 @@ pub fn build(b: *std.Build) void {
             b.installArtifact(bench);
             const run_bench = b.addRunArtifact(bench);
             run_bench.addArgs(&.{ "micro", "--json", "zig-out/bench/micro.json", "--markdown", "zig-out/bench/micro.md", "--svg", "zig-out/bench/micro.svg" });
-            if (b.args) |a| run_bench.addArgs(a);
+            run_bench.addPassthruArgs();
             b.step("bench", "Run hot-path microbenchmarks").dependOn(&run_bench.step);
             const bench_tests = b.addTest(.{ .root_module = bench_mod, .filters = test_filters });
             test_step.dependOn(&b.addRunArtifact(bench_tests).step);
 
             const netns = b.addSystemCommand(&.{ "unshare", "--user", "--map-root-user", "--net", "--", "sh", "-c", "ip link set lo up && exec \"$0\"" });
-            netns.addArtifactArg(engine_tests);
+            netns.addArtifactArg2(engine_tests, .{});
             b.step("test-netns", "Run unit tests inside an unprivileged user and network namespace").dependOn(&netns.step);
 
             const smoke_mod = b.createModule(.{ .target = target, .optimize = optimize, .link_libc = true });
@@ -299,8 +299,8 @@ pub fn build(b: *std.Build) void {
             b.step("test-ffi", "Build and run the C ABI smoke test against libzeptun.a").dependOn(&run_smoke.step);
 
             const integration = b.addSystemCommand(&.{ "sh", "scripts/netns_integration.sh" });
-            integration.addArtifactArg(cli);
-            integration.addArtifactArg(bench);
+            integration.addArtifactArg2(cli, .{});
+            integration.addArtifactArg2(bench, .{});
             b.step("test-integration", "Run end-to-end tests through a real TUN device in network namespaces").dependOn(&integration.step);
         }
     }
@@ -321,7 +321,7 @@ pub fn build(b: *std.Build) void {
         const rt = resolveTriple(b, entry.triple);
         var o = overrides;
         o.mobile = true;
-        const art = makeArtifacts(b, rt, if (optimize == .Debug) .ReleaseSmall else optimize, o, true);
+        const art = makeArtifacts(b, rt, if (optimize == .debug) .small else optimize, o, true);
         if (art.shared_lib) |lib| {
             const dest: std.Build.InstallDir = .{ .custom = b.fmt("android/jniLibs/{s}", .{entry.abi}) };
             android_step.dependOn(&b.addInstallArtifact(lib, .{ .dest_dir = .{ .override = dest } }).step);
@@ -330,12 +330,12 @@ pub fn build(b: *std.Build) void {
         android_step.dependOn(&b.addInstallArtifact(art.static_lib, .{ .dest_dir = .{ .override = prebuilt } }).step);
     }
 
-    const ios_step = b.step("ios", "Build ReleaseSmall static libraries for the iOS XCFramework slices");
+    const ios_step = b.step("ios", "Build small static libraries for the iOS XCFramework slices");
     for (ios_slices) |slice| {
         const rt = resolveTriple(b, slice.triple);
         var o = overrides;
         o.mobile = true;
-        const art = makeArtifacts(b, rt, if (optimize == .Debug) .ReleaseSmall else optimize, o, true);
+        const art = makeArtifacts(b, rt, if (optimize == .debug) .small else optimize, o, true);
         const dest: std.Build.InstallDir = .{ .custom = b.fmt("ios/{s}", .{slice.name}) };
         ios_step.dependOn(&b.addInstallArtifact(art.static_lib, .{ .dest_dir = .{ .override = dest } }).step);
     }

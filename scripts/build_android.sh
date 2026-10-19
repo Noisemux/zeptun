@@ -8,7 +8,7 @@ NDK=${ANDROID_NDK_HOME:-${ANDROID_NDK_ROOT:-}}
 ABIS=${ABIS:-"armeabi-v7a arm64-v8a x86 x86_64"}
 
 cd "$ROOT"
-"$ZIG" build android -Doptimize=ReleaseSmall
+"$ZIG" build android -Doptimize=small
 
 if [ -z "$NDK" ]; then
     printf 'zeptun: libzeptun.so and libzeptun.a per ABI are in %s\n' "$OUT"

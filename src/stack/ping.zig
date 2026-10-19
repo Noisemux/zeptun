@@ -34,7 +34,7 @@ pub fn Ping(comptime W: type) type {
             client_id: u16 = 0,
             wire_id: u16 = 0,
             last_active: u64 = 0,
-            timer: timeouts.Timer = .{ .kind = @intFromEnum(timeouts.Kind.icmp_idle) },
+            timer: timeouts.Timer = .{ .kind = @backingInt(timeouts.Kind.icmp_idle) },
             rx_c: Loop.Completion = .{},
             name: sys.Sockaddr = .{},
         };

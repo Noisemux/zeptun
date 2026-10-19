@@ -36,7 +36,7 @@ Method, runner specification, latency, UDP, memory and the raw tables: [docs/ben
 
 ## Build
 
-Zig 0.16.0 is the only requirement.
+Zig 0.17.0 is the only requirement.
 
 ### Unix
 
@@ -63,12 +63,12 @@ This builds `libzeptun.so` and `libzeptun.a` for `armeabi-v7a`, `arm64-v8a`, `x8
 sh scripts/make_xcframework.sh
 ```
 
-This produces `zig-out/Zeptun.xcframework` with the iOS device, iOS simulator and macOS slices. `Package.swift` exposes it to SwiftPM.
+This produces `zig-out/Zeptun.xcframework` with the iOS device, iOS simulator and macOS slices. `Package.swift` exposes it to SwiftPM. The slices target macOS 15.0 and iOS 18.0, the oldest versions Zig 0.17 supports.
 
 ### Windows
 
 ```sh
-zig build -Dtarget=x86_64-windows-gnu -Doptimize=ReleaseFast
+zig build -Dtarget=x86_64-windows-gnu -Doptimize=fast
 make wintun
 ```
 
@@ -77,7 +77,7 @@ The tunnel uses Wintun, which is vendored in `third-part/wintun` with its licenc
 ### Library
 
 ```sh
-zig build -Doptimize=ReleaseFast
+zig build -Doptimize=fast
 ```
 
 This writes `zig-out/lib/libzeptun.a`, the shared library and `zig-out/include/zeptun.h`. Other targets: `make TARGET=aarch64-linux-musl`, or `zig build cross` for the whole matrix.

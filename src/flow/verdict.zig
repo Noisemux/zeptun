@@ -67,6 +67,6 @@ test "judge maps verdicts and passes the flow" {
     try std.testing.expectEqual(@as(u16, 53), Seen.last.destination_port);
     try std.testing.expectEqualSlices(u8, &[_]u8{ 10, 0, 0, 2 }, Seen.last.source[0..4]);
     j.ctx = @ptrFromInt(9);
-    try std.testing.expectEqual(Action.proxy, j.ask(6, true, &[_]u8{0} ** 16, 1, &[_]u8{0} ** 16, 2));
+    try std.testing.expectEqual(Action.proxy, j.ask(6, true, &@as([16]u8, @splat(0)), 1, &@as([16]u8, @splat(0)), 2));
     try std.testing.expectEqual(@as(u8, 6), Seen.last.family);
 }

@@ -4,7 +4,7 @@ set -eu
 ROOT=$(cd "$(dirname "$0")/.." && pwd)
 cd "$ROOT"
 
-OPTIMIZE=${OPTIMIZE:-ReleaseSmall}
+OPTIMIZE=${OPTIMIZE:-small}
 OUT=${OUT:-zig-out/Zeptun.xcframework}
 WORK=${WORK:-zig-out/xcframework-work}
 

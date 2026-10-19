@@ -87,7 +87,7 @@ fn session(server: *Server, fd: i32) void {
     if (!readFull(fd, methods[0..hdr[1]])) return;
     const want_auth = server.opts.username.len > 0;
     const method: u8 = if (want_auth) 2 else 0;
-    if (std.mem.indexOfScalar(u8, methods[0..hdr[1]], method) == null) {
+    if (std.mem.findScalar(u8, methods[0..hdr[1]], method) == null) {
         _ = writeFull(fd, &[_]u8{ 5, 0xff });
         return;
     }
@@ -192,7 +192,7 @@ fn forwardUdp(server: *Server, ctrl: i32, family: addr.Family) void {
                 _ = sys.sendto(ufd, stream[off + f.header_len .. off + f.total], 0, &dsa);
                 off += f.total;
             }
-            std.mem.copyForwards(u8, stream[0 .. have - off], stream[off..have]);
+            @memmove(stream[0 .. have - off], stream[off..have]);
             have -= off;
         }
         if (fds[1].revents & linux.POLL.IN != 0) {

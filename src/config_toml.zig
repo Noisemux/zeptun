@@ -225,8 +225,10 @@ fn assign(comptime T: type, out: *T, keys: []const []const u8, p: *Parser) Error
         },
         .@"struct" => |st| {
             if (keys.len == 0) return error.ConfigError;
-            inline for (st.fields) |f| {
-                if (std.mem.eql(u8, keys[0], f.name)) return assign(f.type, &@field(out.*, f.name), keys[1..], p);
+            inline for (st.field_names, st.field_types) |name, FieldType| {
+                if (std.mem.eql(u8, keys[0], name)) {
+                    return assign(FieldType, &@field(out.*, name), keys[1..], p);
+                }
             }
             return error.ConfigError;
         },

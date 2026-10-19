@@ -56,12 +56,12 @@ pub fn open(name: []const u8) !Handle {
     if (comptime !supported) return error.NotSupported;
     if (name.len == 0) return .{};
     var buf: [512]u8 = undefined;
-    if (std.mem.indexOfScalar(u8, name, '/') != null) {
-        const path = std.fmt.bufPrintZ(&buf, "{s}", .{name}) catch return error.InvalidArgument;
+    if (std.mem.findScalar(u8, name, '/') != null) {
+        const path = std.mem.printSentinel(&buf, "{s}", .{name}, 0) catch return error.InvalidArgument;
         return .{ .fd = try openPath(path) };
     }
     for (dirs) |dir| {
-        const path = std.fmt.bufPrintZ(&buf, "{s}{s}", .{ dir, name }) catch continue;
+        const path = std.mem.printSentinel(&buf, "{s}{s}", .{ dir, name }, 0) catch continue;
         const fd = openPath(path) catch continue;
         return .{ .fd = fd };
     }

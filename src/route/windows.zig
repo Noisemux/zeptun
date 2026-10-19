@@ -540,7 +540,7 @@ fn nameServers(servers: []const addr.Prefix, family: addr.Family, out: []u16) us
     for (servers) |p| {
         if (p.addr.family != family) continue;
         var text: [64]u8 = undefined;
-        const s = std.fmt.bufPrint(&text, "{f}", .{p.addr}) catch continue;
+        const s = std.mem.print(&text, "{f}", .{p.addr}) catch continue;
         if (len + s.len + 2 > out.len) break;
         if (len > 0) {
             out[len] = ',';

@@ -7,7 +7,7 @@ const log = @import("../log.zig");
 
 const libc = std.c;
 
-pub const supported = sys.is_darwin and builtin.os.tag == .macos;
+pub const supported = sys.is_darwin and builtin.target.os.tag == .macos;
 
 pub const OpenOptions = struct {
     name: []const u8,

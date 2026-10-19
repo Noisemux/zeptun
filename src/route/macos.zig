@@ -8,8 +8,8 @@ const log = @import("../log.zig");
 const bsd = @import("../device/bsd.zig");
 
 const libc = std.c;
-const os = builtin.os.tag;
-const native_endian = builtin.cpu.arch.endian();
+const os = builtin.target.os.tag;
+const native_endian = builtin.target.cpu.arch.endian();
 
 pub const supported = sys.is_darwin or os == .freebsd;
 
@@ -352,7 +352,7 @@ const RouteSocket = struct {
             if (len < @sizeOf(RtMsgHdr)) continue;
             const h = std.mem.bytesToValue(RtMsgHdr, buf[0..@sizeOf(RtMsgHdr)]);
             if (h.version != RTM_VERSION or h.kind != kind or h.pid != rt.pid or h.seq != seq) continue;
-            if (h.err > 0 and h.err <= std.math.maxInt(u16)) return routeError(@enumFromInt(@as(u16, @intCast(h.err))));
+            if (h.err > 0 and h.err <= std.math.maxInt(u16)) return routeError(@fromBackingInt(@intCast(@as(u16, @intCast(h.err)))));
             return buf[0..@min(len, h.msglen)];
         }
     }

@@ -18,7 +18,7 @@ Without the NDK the script still produces the Zig libraries, which is all an app
 
 ## Command line on a rooted device
 
-`zig build -Dtarget=aarch64-linux-android -Doptimize=ReleaseFast` also produces the `zeptun` and `zeptun-bench` executables as static binaries, which is the quickest way to use the engine on a rooted phone:
+`zig build -Dtarget=aarch64-linux-android -Doptimize=fast` also produces the `zeptun` and `zeptun-bench` executables as static binaries, which is the quickest way to use the engine on a rooted phone:
 
 ```sh
 adb push zig-out/bin/zeptun /data/local/tmp/

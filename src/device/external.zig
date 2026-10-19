@@ -236,7 +236,7 @@ test "inject and drain through shared queue" {
     var s = try Shared.init(std.testing.allocator, 1500, 8);
     defer s.deinit();
     try s.inject("abc");
-    try std.testing.expectError(error.TooLarge, s.inject(&([_]u8{0} ** 4000)));
+    try std.testing.expectError(error.TooLarge, s.inject(&@as([4000]u8, @splat(0))));
     const b = s.inbound.pop().?;
     try std.testing.expectEqualStrings("abc", b.bytes());
     var worker_pool = try pool.Pool.init(std.testing.allocator, .{ .count = 1, .buffer_size = 256 });

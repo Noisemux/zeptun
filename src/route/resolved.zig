@@ -53,7 +53,7 @@ fn run(exe: [:0]const u8, args: []const [*:0]const u8) bool {
         linux.exit_group(127);
     }
     const deadline = sys.monotonicMs() + wait_ms;
-    var status: u32 = 0;
+    var status: i32 = 0;
     while (true) {
         const r = sys.linuxResult(linux.wait4(pid, &status, linux.W.NOHANG, null));
         if (r > 0) break;

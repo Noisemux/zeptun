@@ -18,7 +18,7 @@ Parsers, checksums (scalar against SIMD), the buffer pool, flow tables, the time
 `src/tests/tcp_sim.zig` runs the real terminator, packet pool and timer wheel against a simulated event loop, handler and clock. A model peer transfers data through an echo upstream over links with loss, duplication, reordering and delay, while its receive window changes and the upstream socket stalls. Every byte is verified in both directions, the engine may never exceed the advertised window, and the connection must finish within 240 virtual seconds leaving no buffers, timers or completions behind. A chaos mode injects random segments and upstream errors.
 
 ```sh
-ZEPTUN_SIM_SEEDS=10000:50000 zig build test -Doptimize=ReleaseSafe -Dtest-filter="tcp simulation seeded"
+ZEPTUN_SIM_SEEDS=10000:50000 zig build test -Doptimize=safe -Dtest-filter="tcp simulation seeded"
 ```
 
 ## Integration suite

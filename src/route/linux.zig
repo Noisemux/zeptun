@@ -137,8 +137,8 @@ const Builder = struct {
 
     fn attr(b: *Builder, kind: u16, data: []const u8) void {
         const total = 4 + data.len;
-        std.mem.writeInt(u16, b.buf[b.len..][0..2], @intCast(total), builtin.cpu.arch.endian());
-        std.mem.writeInt(u16, b.buf[b.len + 2 ..][0..2], kind, builtin.cpu.arch.endian());
+        std.mem.writeInt(u16, b.buf[b.len..][0..2], @intCast(total), builtin.target.cpu.arch.endian());
+        std.mem.writeInt(u16, b.buf[b.len + 2 ..][0..2], kind, builtin.target.cpu.arch.endian());
         @memcpy(b.buf[b.len + 4 ..][0..data.len], data);
         const aligned = std.mem.alignForward(usize, b.len + total, 4);
         @memset(b.buf[b.len + total .. aligned], 0);
@@ -150,7 +150,7 @@ const Builder = struct {
     }
 
     fn finish(b: *Builder) []const u8 {
-        std.mem.writeInt(u32, b.buf[0..4], @intCast(b.len), builtin.cpu.arch.endian());
+        std.mem.writeInt(u32, b.buf[0..4], @intCast(b.len), builtin.target.cpu.arch.endian());
         return b.buf[0..b.len];
     }
 };
@@ -199,9 +199,9 @@ pub const Netlink = struct {
                 const h = std.mem.bytesToValue(NlMsgHdr, rbuf[off..][0..@sizeOf(NlMsgHdr)]);
                 if (h.len < @sizeOf(NlMsgHdr) or off + h.len > total) return error.NetlinkError;
                 if (h.kind == NLMSG_ERROR and h.seq == seq) {
-                    const code = std.mem.readInt(i32, rbuf[off + @sizeOf(NlMsgHdr) ..][0..4], builtin.cpu.arch.endian());
+                    const code = std.mem.readInt(i32, rbuf[off + @sizeOf(NlMsgHdr) ..][0..4], builtin.target.cpu.arch.endian());
                     if (code == 0) return;
-                    const e: linux.E = @enumFromInt(-code);
+                    const e: linux.E = @fromBackingInt(@intCast(-code));
                     return switch (e) {
                         .PERM, .ACCES => error.PermissionDenied,
                         .EXIST => error.Exists,
@@ -338,7 +338,7 @@ pub const Netlink = struct {
         n.seq += 1;
         var b: Builder = .{};
         b.begin(kind, NLM_F_DUMP, seq);
-        std.mem.writeInt(u16, b.buf[6..8], NLM_F_REQUEST | NLM_F_DUMP, builtin.cpu.arch.endian());
+        std.mem.writeInt(u16, b.buf[6..8], NLM_F_REQUEST | NLM_F_DUMP, builtin.target.cpu.arch.endian());
         @memcpy(b.buf[b.len..][0..body.len], body);
         b.len = std.mem.alignForward(usize, b.len + body.len, 4);
         const msg = b.finish();
@@ -416,21 +416,21 @@ fn routeAttrs(rt: RtMsg, body: []const u8) RouteAttrs {
     var info: RouteAttrs = .{ .table = rt.table };
     var a: usize = std.mem.alignForward(usize, @sizeOf(RtMsg), 4);
     while (a + 4 <= body.len) {
-        const alen = std.mem.readInt(u16, body[a..][0..2], builtin.cpu.arch.endian());
-        const akind = std.mem.readInt(u16, body[a + 2 ..][0..2], builtin.cpu.arch.endian()) & 0x3fff;
+        const alen = std.mem.readInt(u16, body[a..][0..2], builtin.target.cpu.arch.endian());
+        const akind = std.mem.readInt(u16, body[a + 2 ..][0..2], builtin.target.cpu.arch.endian()) & 0x3fff;
         if (alen < 4 or a + alen > body.len) break;
         const data = body[a + 4 .. a + alen];
         switch (akind) {
             RTA_TABLE => if (data.len >= 4) {
-                info.table = std.mem.readInt(u32, data[0..4], builtin.cpu.arch.endian());
+                info.table = std.mem.readInt(u32, data[0..4], builtin.target.cpu.arch.endian());
             },
             RTA_DST => info.dst = data,
             RTA_GATEWAY => info.gateway = data,
             RTA_OIF => if (data.len >= 4) {
-                info.oif = std.mem.readInt(u32, data[0..4], builtin.cpu.arch.endian());
+                info.oif = std.mem.readInt(u32, data[0..4], builtin.target.cpu.arch.endian());
             },
             RTA_PRIORITY => if (data.len >= 4) {
-                info.priority = std.mem.readInt(u32, data[0..4], builtin.cpu.arch.endian());
+                info.priority = std.mem.readInt(u32, data[0..4], builtin.target.cpu.arch.endian());
             },
             RTA_PREFSRC => info.prefsrc = data,
             else => {},
@@ -472,8 +472,8 @@ const AddressHash = struct {
         if (msg.index != h.index) return;
         var a: usize = std.mem.alignForward(usize, @sizeOf(IfAddrMsg), 4);
         while (a + 4 <= body.len) {
-            const alen = std.mem.readInt(u16, body[a..][0..2], builtin.cpu.arch.endian());
-            const akind = std.mem.readInt(u16, body[a + 2 ..][0..2], builtin.cpu.arch.endian());
+            const alen = std.mem.readInt(u16, body[a..][0..2], builtin.target.cpu.arch.endian());
+            const akind = std.mem.readInt(u16, body[a + 2 ..][0..2], builtin.target.cpu.arch.endian());
             if (alen < 4 or a + alen > body.len) break;
             if (akind == IFA_LOCAL) h.hash.update(body[a + 4 .. a + alen]);
             a += std.mem.alignForward(usize, alen, 4);
@@ -582,7 +582,7 @@ pub fn configure(setup: InterfaceSetup) Error!Applied {
 
 fn relaxReversePathFilter(name: []const u8) void {
     var path: [64]u8 = undefined;
-    const file = std.fmt.bufPrint(&path, "/proc/sys/net/ipv4/conf/{s}/rp_filter", .{name}) catch return;
+    const file = std.mem.print(&path, "/proc/sys/net/ipv4/conf/{s}/rp_filter", .{name}) catch return;
     const fd = sys.linuxResult(std.os.linux.open(@ptrCast(path[0..file.len].ptr), .{ .ACCMODE = .RDWR, .CLOEXEC = true }, 0));
     if (fd < 0) return;
     defer sys.close(fd);
@@ -725,8 +725,8 @@ test "netlink message layout" {
     b.attr(IFA_LOCAL, &[_]u8{ 172, 19, 0, 1 });
     const msg = b.finish();
     try std.testing.expectEqual(@as(usize, 16 + 8 + 8), msg.len);
-    try std.testing.expectEqual(@as(u32, 32), std.mem.readInt(u32, msg[0..4], builtin.cpu.arch.endian()));
-    try std.testing.expectEqual(@as(u16, 8), std.mem.readInt(u16, msg[24..26], builtin.cpu.arch.endian()));
+    try std.testing.expectEqual(@as(u32, 32), std.mem.readInt(u32, msg[0..4], builtin.target.cpu.arch.endian()));
+    try std.testing.expectEqual(@as(u16, 8), std.mem.readInt(u16, msg[24..26], builtin.target.cpu.arch.endian()));
     try std.testing.expectEqual(@sizeOf(RtMsg), 12);
     try std.testing.expectEqual(@sizeOf(FibRuleHdr), 12);
     try std.testing.expectEqual(@sizeOf(IfInfoMsg), 16);

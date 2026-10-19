@@ -188,7 +188,7 @@ pub fn print(which: Std, comptime fmt: []const u8, args: anytype) void {
 test "file round trip" {
     if (sys.is_windows) return error.SkipZigTest;
     var name_buf: [64]u8 = undefined;
-    const name = try std.fmt.bufPrint(&name_buf, ".zeptun-file-test-{d}", .{sys.monotonicNs()});
+    const name = try std.mem.print(&name_buf, ".zeptun-file-test-{d}", .{sys.monotonicNs()});
     try writeFile(name, "first\n");
     defer remove(name);
     const h = try open(name, .append);

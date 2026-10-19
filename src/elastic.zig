@@ -166,7 +166,7 @@ pub fn threadCpuNs(tid: i32) ?u64 {
     const linux = std.os.linux;
     const id: u32 = (~@as(u32, @bitCast(tid)) << 3) | 6;
     var ts: linux.timespec = undefined;
-    if (linux.errno(linux.clock_gettime(@enumFromInt(id), &ts)) != .SUCCESS) return null;
+    if (linux.errno(linux.clock_gettime(@fromBackingInt(@intCast(id)), &ts)) != .SUCCESS) return null;
     return @as(u64, @intCast(ts.sec)) * std.time.ns_per_s + @as(u64, @intCast(ts.nsec));
 }
 
@@ -219,7 +219,7 @@ const CpuTimes = struct { idle: u64, total: u64 };
 
 fn parseCpuLine(text: []const u8) ?CpuTimes {
     if (!std.mem.startsWith(u8, text, "cpu ")) return null;
-    const end = std.mem.indexOfScalar(u8, text, '\n') orelse text.len;
+    const end = std.mem.findScalar(u8, text, '\n') orelse text.len;
     var it = std.mem.tokenizeScalar(u8, text[4..end], ' ');
     var fields: [8]u64 = @splat(0);
     var i: usize = 0;

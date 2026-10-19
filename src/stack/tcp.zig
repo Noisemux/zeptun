@@ -194,10 +194,10 @@ pub fn Tcp(comptime W: type) type {
             ooo_bytes: u32 = 0,
             sacks: [4]parse.SackBlock = undefined,
             sack_count: u8 = 0,
-            rto_timer: timeouts.Timer = .{ .kind = @intFromEnum(timeouts.Kind.tcp_rto) },
-            persist_timer: timeouts.Timer = .{ .kind = @intFromEnum(timeouts.Kind.tcp_persist) },
-            life_timer: timeouts.Timer = .{ .kind = @intFromEnum(timeouts.Kind.tcp_life) },
-            delack_timer: timeouts.Timer = .{ .kind = @intFromEnum(timeouts.Kind.tcp_delack) },
+            rto_timer: timeouts.Timer = .{ .kind = @backingInt(timeouts.Kind.tcp_rto) },
+            persist_timer: timeouts.Timer = .{ .kind = @backingInt(timeouts.Kind.tcp_persist) },
+            life_timer: timeouts.Timer = .{ .kind = @backingInt(timeouts.Kind.tcp_life) },
+            delack_timer: timeouts.Timer = .{ .kind = @backingInt(timeouts.Kind.tcp_delack) },
             last_active: u64 = 0,
             target: addr.Endpoint = .{},
             next_dirty: ?*Conn = null,
@@ -1681,7 +1681,7 @@ pub fn Tcp(comptime W: type) type {
         }
 
         pub fn onTimer(t: *Self, w: *W, timer: *timeouts.Timer) void {
-            switch (@as(timeouts.Kind, @enumFromInt(timer.kind))) {
+            switch (@as(timeouts.Kind, @fromBackingInt(@intCast(timer.kind)))) {
                 .tcp_rto => t.onRto(w, @alignCast(@fieldParentPtr("rto_timer", timer))),
                 .tcp_persist => t.onPersist(w, @alignCast(@fieldParentPtr("persist_timer", timer))),
                 .tcp_life => t.onLife(w, @alignCast(@fieldParentPtr("life_timer", timer))),
@@ -1979,10 +1979,10 @@ pub fn Tcp(comptime W: type) type {
         }
 
         fn resetTimers(c: *Conn) void {
-            c.rto_timer = .{ .kind = @intFromEnum(timeouts.Kind.tcp_rto) };
-            c.persist_timer = .{ .kind = @intFromEnum(timeouts.Kind.tcp_persist) };
-            c.life_timer = .{ .kind = @intFromEnum(timeouts.Kind.tcp_life) };
-            c.delack_timer = .{ .kind = @intFromEnum(timeouts.Kind.tcp_delack) };
+            c.rto_timer = .{ .kind = @backingInt(timeouts.Kind.tcp_rto) };
+            c.persist_timer = .{ .kind = @backingInt(timeouts.Kind.tcp_persist) };
+            c.life_timer = .{ .kind = @backingInt(timeouts.Kind.tcp_life) };
+            c.delack_timer = .{ .kind = @backingInt(timeouts.Kind.tcp_delack) };
         }
 
         fn transfer(t: *Self, w: *W, c: *Conn, to: u16) bool {

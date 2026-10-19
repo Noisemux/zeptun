@@ -2,7 +2,7 @@ const std = @import("std");
 const builtin = @import("builtin");
 const addr = @import("../addr.zig");
 
-pub const os = builtin.os.tag;
+pub const os = builtin.target.os.tag;
 pub const is_linux = os == .linux;
 pub const is_windows = os == .windows;
 pub const is_darwin = switch (os) {
@@ -13,7 +13,7 @@ pub const is_bsd = switch (os) {
     .freebsd, .openbsd, .netbsd, .dragonfly => true,
     else => false,
 };
-pub const is_android = builtin.abi.isAndroid();
+pub const is_android = builtin.target.abi.isAndroid();
 pub const is_posix_libc = is_darwin or is_bsd;
 
 const linux = std.os.linux;
@@ -63,7 +63,7 @@ pub const Errno = enum(u16) {
     other,
 
     pub inline fn result(e: Errno) i32 {
-        return -@as(i32, @intFromEnum(e));
+        return -@as(i32, @backingInt(e));
     }
 };
 
@@ -160,7 +160,7 @@ pub const Sockaddr = extern struct {
             sa.storage[0] = @intCast(size);
             sa.storage[1] = @intCast(fam);
         } else {
-            std.mem.writeInt(u16, sa.storage[0..2], fam, builtin.cpu.arch.endian());
+            std.mem.writeInt(u16, sa.storage[0..2], fam, builtin.target.cpu.arch.endian());
         }
         std.mem.writeInt(u16, sa.storage[2..4], ep.port, .big);
         if (ep.addr.family == .v4) {
@@ -174,7 +174,7 @@ pub const Sockaddr = extern struct {
 
     pub fn family(sa: *const Sockaddr) u16 {
         if (sa_has_len) return sa.storage[1];
-        return std.mem.readInt(u16, sa.storage[0..2], builtin.cpu.arch.endian());
+        return std.mem.readInt(u16, sa.storage[0..2], builtin.target.cpu.arch.endian());
     }
 
     pub fn toEndpoint(sa: *const Sockaddr) ?addr.Endpoint {
@@ -443,8 +443,8 @@ pub fn socketError(fd: fd_t) Errno {
     if (r < 0) return toErrno(r);
     if (r == 0) return .success;
     if (is_windows) return windows.mapWsaError(r);
-    if (is_linux) return mapErrno(@as(linux.E, @enumFromInt(r)));
-    return mapErrno(@as(c.E, @enumFromInt(r)));
+    if (is_linux) return mapErrno(@as(linux.E, @fromBackingInt(@intCast(r))));
+    return mapErrno(@as(c.E, @fromBackingInt(@intCast(r))));
 }
 
 pub fn connect(fd: fd_t, sa: *const Sockaddr) i32 {
@@ -528,9 +528,9 @@ pub fn recvfrom(fd: fd_t, buf: []u8, flags: u32, sa: *Sockaddr) i32 {
 pub const Shutdown = enum(u8) { read = 0, write = 1, both = 2 };
 
 pub fn shutdown(fd: fd_t, how: Shutdown) i32 {
-    if (is_linux) return linuxResult(linux.shutdown(fd, @intFromEnum(how)));
-    if (is_windows) return windows.shutdown(fd, @intFromEnum(how));
-    return libcResult(c.shutdown(fd, @intFromEnum(how)));
+    if (is_linux) return linuxResult(linux.shutdown(fd, @backingInt(how)));
+    if (is_windows) return windows.shutdown(fd, @backingInt(how));
+    return libcResult(c.shutdown(fd, @backingInt(how)));
 }
 
 pub fn getsockname(fd: fd_t, sa: *Sockaddr) i32 {

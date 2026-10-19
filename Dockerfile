@@ -1,6 +1,6 @@
 FROM --platform=$BUILDPLATFORM alpine:3.21 AS builder
 
-ARG ZIG_VERSION=0.16.0
+ARG ZIG_VERSION=0.17.0
 ARG TARGETARCH
 ARG TARGETVARIANT
 
@@ -31,7 +31,7 @@ RUN set -eu; \
       386) TARGET=x86-linux-musl ;; \
       *) echo "unsupported target ${arch}" >&2; exit 1 ;; \
     esac; \
-    zig build -Dtarget="$TARGET" -Doptimize=ReleaseFast -Dstrip=true
+    zig build -Dtarget="$TARGET" -Doptimize=fast -Dstrip=true
 
 FROM alpine:3.21
 LABEL org.opencontainers.image.source="https://github.com/noisemux/zeptun"

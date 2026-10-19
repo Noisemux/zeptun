@@ -1,6 +1,6 @@
 PROJECT := zeptun
 ZIG ?= zig
-OPTIMIZE ?= ReleaseFast
+OPTIMIZE ?= fast
 PREFIX ?= /usr/local
 BINDIR ?= $(PREFIX)/bin
 LIBDIR ?= $(PREFIX)/lib

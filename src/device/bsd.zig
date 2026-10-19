@@ -5,8 +5,8 @@ const sys = @import("../io/sys.zig");
 const log = @import("../log.zig");
 
 const libc = std.c;
-const os = builtin.os.tag;
-const native_endian = builtin.cpu.arch.endian();
+const os = builtin.target.os.tag;
+const native_endian = builtin.target.cpu.arch.endian();
 
 pub const supported = sys.is_bsd;
 
@@ -165,9 +165,9 @@ pub const Tun = struct {
 
     fn openUnit(t: *Tun, unit: u32) !void {
         var path_buf: [32]u8 = undefined;
-        const path = std.fmt.bufPrintZ(&path_buf, "/dev/tun{d}", .{unit}) catch return error.InvalidArgument;
+        const path = std.mem.printSentinel(&path_buf, "/dev/tun{d}", .{unit}, 0) catch return error.InvalidArgument;
         var name: [16]u8 = @splat(0);
-        const n = std.fmt.bufPrint(&name, "tun{d}", .{unit}) catch return error.InvalidArgument;
+        const n = std.mem.print(&name, "tun{d}", .{unit}) catch return error.InvalidArgument;
         const existed = interfaceIndex(n) != 0;
         const fd = libc.open(path, open_flags);
         if (fd < 0) return sys.errnoError(sys.mapErrno(libc.errno(fd)));

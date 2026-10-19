@@ -7,7 +7,7 @@ const libc = std.c;
 
 const wake_token: usize = std.math.maxInt(usize);
 const wake_ident: usize = 0;
-const user_event = builtin.os.tag != .openbsd;
+const user_event = builtin.target.os.tag != .openbsd;
 const msg_dontwait: u32 = libc.MSG.DONTWAIT;
 const msg_nosignal: u32 = if (sys.is_darwin) 0 else libc.MSG.NOSIGNAL;
 const zero_timeout: libc.timespec = .{ .sec = 0, .nsec = 0 };
@@ -29,7 +29,7 @@ fn apply(kq: i32, changes: []const libc.Kevent) i32 {
 
 fn dataErrno(data: anytype) sys.Errno {
     if (data <= 0 or data > std.math.maxInt(u16)) return .other;
-    return sys.mapErrno(@as(libc.E, @enumFromInt(@as(u16, @intCast(data)))));
+    return sys.mapErrno(@as(libc.E, @fromBackingInt(@intCast(@as(u16, @intCast(data))))));
 }
 
 pub const Loop = struct {

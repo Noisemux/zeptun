@@ -11,10 +11,10 @@ const log = zeptun.log;
 const addr = zeptun.addr;
 
 pub const std_options: std.Options = .{
-    .signal_stack_size = if (builtin.mode == .Debug or builtin.mode == .ReleaseSafe) 1 << 18 else null,
+    .signal_stack_size = if (builtin.mode == .debug or builtin.mode == .safe) 1 << 18 else null,
 };
 
-pub const panic = if (builtin.mode == .Debug or builtin.mode == .ReleaseSafe) std.debug.FullPanic(std.debug.defaultPanic) else std.debug.FullPanic(rawPanic);
+pub const panic = if (builtin.mode == .debug or builtin.mode == .safe) std.debug.FullPanic(std.debug.defaultPanic) else std.debug.FullPanic(rawPanic);
 
 fn rawPanic(msg: []const u8, ra: ?usize) noreturn {
     @branchHint(.cold);
@@ -94,7 +94,7 @@ fn allocator() std.mem.Allocator {
 }
 
 inline fn code(c: errors.Code) c_int {
-    return @intFromEnum(c);
+    return @backingInt(c);
 }
 
 fn cstr(buf: []const u8) []const u8 {
@@ -169,7 +169,7 @@ export fn zeptun_config_init(out: ?*Config, preset: u32) callconv(.c) c_int {
     c.* = std.mem.zeroes(Config);
     c.struct_size = @sizeOf(Config);
     c.preset = preset;
-    c.device_kind = @intFromEnum(src.device.kind);
+    c.device_kind = @backingInt(src.device.kind);
     c.tun_fd = -1;
     const name = src.device.name.slice();
     @memcpy(c.tun_name[0..name.len], name);
@@ -177,14 +177,14 @@ export fn zeptun_config_init(out: ?*Config, preset: u32) callconv(.c) c_int {
     c.queues = src.device.queues;
     c.offload = @intFromBool(src.device.offload);
     c.configure = @intFromBool(src.device.configure);
-    if (src.device.address4) |a| _ = std.fmt.bufPrint(c.address4[0..63], "{f}", .{a}) catch {};
-    if (src.device.address6) |a| _ = std.fmt.bufPrint(c.address6[0..63], "{f}", .{a}) catch {};
-    c.stack_mode = @intFromEnum(src.stack.mode);
-    c.handler_kind = @intFromEnum(src.handler.kind);
+    if (src.device.address4) |a| _ = std.mem.print(c.address4[0..63], "{f}", .{a}) catch {};
+    if (src.device.address6) |a| _ = std.mem.print(c.address6[0..63], "{f}", .{a}) catch {};
+    c.stack_mode = @backingInt(src.stack.mode);
+    c.handler_kind = @backingInt(src.handler.kind);
     c.socks5_udp = 1;
     c.route_table = src.route.table;
     c.rule_priority = src.route.rule_priority;
-    c.io_backend = @intFromEnum(src.io.backend);
+    c.io_backend = @backingInt(src.io.backend);
     c.max_tcp_sessions = src.stack.max_tcp_sessions;
     c.max_udp_sessions = src.stack.max_udp_sessions;
     c.tcp_rx_window = src.stack.tcp_rx_window;
@@ -192,7 +192,7 @@ export fn zeptun_config_init(out: ?*Config, preset: u32) callconv(.c) c_int {
     c.udp_idle_timeout_ms = src.stack.udp_idle_timeout_ms;
     c.tcp_idle_timeout_ms = src.stack.tcp_idle_timeout_ms;
     c.memory_budget_bytes = src.memory.budget_bytes;
-    c.log_level = @intFromEnum(src.log_level);
+    c.log_level = @backingInt(src.log_level);
     c.workers = src.io.workers;
     return code(.ok);
 }
@@ -307,7 +307,7 @@ var log_cb: ?LogFn = null;
 var log_ctx: ?*anyopaque = null;
 
 fn logBridge(_: ?*anyopaque, level: log.Level, message: []const u8) void {
-    if (log_cb) |f| f(log_ctx, @intFromEnum(level), message.ptr, message.len);
+    if (log_cb) |f| f(log_ctx, @backingInt(level), message.ptr, message.len);
 }
 
 export fn zeptun_set_log_callback(cb: ?LogFn, ctx: ?*anyopaque, level: c_int) callconv(.c) c_int {

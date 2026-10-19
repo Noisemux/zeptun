@@ -326,7 +326,7 @@ pub fn Worker(comptime L: type) type {
 
         pub fn sendControl(w: *Self, to: u16, b: *pool.Buffer, kind: elastic.Control) void {
             b.flags = pool.flag_control;
-            b.meta = @intFromEnum(kind);
+            b.meta = @backingInt(kind);
             w.post(to, b);
         }
 
@@ -354,7 +354,7 @@ pub fn Worker(comptime L: type) type {
         }
 
         fn onControl(w: *Self, b: *pool.Buffer) void {
-            switch (@as(elastic.Control, @enumFromInt(b.meta))) {
+            switch (@as(elastic.Control, @fromBackingInt(@intCast(b.meta)))) {
                 .tcp_transfer => if (has_userspace_tcp) w.tcp.install(w, b) else w.pool.put(b),
                 .tcp_ack => if (has_userspace_tcp) w.tcp.onTransferAck(w, b) else w.pool.put(b),
                 .udp_transfer => w.udp.install(w, b),
@@ -364,7 +364,7 @@ pub fn Worker(comptime L: type) type {
         }
 
         fn dropControl(w: *Self, b: *pool.Buffer) void {
-            switch (@as(elastic.Control, @enumFromInt(b.meta))) {
+            switch (@as(elastic.Control, @fromBackingInt(@intCast(b.meta)))) {
                 .tcp_transfer => if (has_userspace_tcp) w.tcp.dropRecord(w, b) else w.pool.put(b),
                 .udp_transfer => w.udp.dropRecord(w, b),
                 else => w.pool.put(b),
@@ -459,7 +459,7 @@ pub fn Worker(comptime L: type) type {
         }
 
         fn onTimer(w: *Self, t: *timeouts.Timer) void {
-            switch (@as(timeouts.Kind, @enumFromInt(t.kind))) {
+            switch (@as(timeouts.Kind, @fromBackingInt(@intCast(t.kind)))) {
                 .tcp_rto, .tcp_persist, .tcp_life, .tcp_delack => if (has_userspace_tcp) w.tcp.onTimer(w, t),
                 .udp_idle => w.udp.onTimer(w, t),
                 .icmp_idle => w.ping.onTimer(w, t),

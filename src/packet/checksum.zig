@@ -1,7 +1,7 @@
 const std = @import("std");
 const builtin = @import("builtin");
 
-pub const native_endian = builtin.cpu.arch.endian();
+pub const native_endian = builtin.target.cpu.arch.endian();
 
 pub const Impl = enum { scalar, simd };
 

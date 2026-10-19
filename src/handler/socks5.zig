@@ -70,19 +70,19 @@ pub fn encodeGreeting(buf: []u8, with_password: bool) []u8 {
     buf[0] = version;
     if (with_password) {
         buf[1] = 2;
-        buf[2] = @intFromEnum(Method.none);
-        buf[3] = @intFromEnum(Method.password);
+        buf[2] = @backingInt(Method.none);
+        buf[3] = @backingInt(Method.password);
         return buf[0..4];
     }
     buf[1] = 1;
-    buf[2] = @intFromEnum(Method.none);
+    buf[2] = @backingInt(Method.none);
     return buf[0..3];
 }
 
 pub fn parseMethodReply(data: []const u8) Error!Method {
     if (data.len < 2) return error.NeedMore;
     if (data[0] != version) return error.Protocol;
-    const m: Method = @enumFromInt(data[1]);
+    const m: Method = @fromBackingInt(@intCast(data[1]));
     return switch (m) {
         .none, .password => m,
         else => error.NoAcceptableMethod,
@@ -109,13 +109,13 @@ pub fn parseAuthReply(data: []const u8) Error!void {
 pub fn encodeAddress(buf: []u8, ep: addr.Endpoint) usize {
     switch (ep.addr.family) {
         .v4 => {
-            buf[0] = @intFromEnum(Atyp.ipv4);
+            buf[0] = @backingInt(Atyp.ipv4);
             @memcpy(buf[1..5], ep.addr.bytes[0..4]);
             std.mem.writeInt(u16, buf[5..7], ep.port, .big);
             return 7;
         },
         .v6 => {
-            buf[0] = @intFromEnum(Atyp.ipv6);
+            buf[0] = @backingInt(Atyp.ipv6);
             @memcpy(buf[1..17], ep.addr.bytes[0..16]);
             std.mem.writeInt(u16, buf[17..19], ep.port, .big);
             return 19;
@@ -131,7 +131,7 @@ pub const Target = union(enum) {
         switch (t) {
             .ip => |ep| return encodeAddress(buf, ep),
             .host => |h| {
-                buf[0] = @intFromEnum(Atyp.domain);
+                buf[0] = @backingInt(Atyp.domain);
                 buf[1] = @intCast(h.name.len);
                 @memcpy(buf[2..][0..h.name.len], h.name);
                 std.mem.writeInt(u16, buf[2 + h.name.len ..][0..2], h.port, .big);
@@ -147,7 +147,7 @@ pub fn encodeRequest(buf: []u8, cmd: Command, target: addr.Endpoint) []u8 {
 
 pub fn encodeRequestTo(buf: []u8, cmd: Command, target: Target) []u8 {
     buf[0] = version;
-    buf[1] = @intFromEnum(cmd);
+    buf[1] = @backingInt(cmd);
     buf[2] = 0;
     const n = target.encode(buf[3..]);
     return buf[0 .. 3 + n];
@@ -162,7 +162,7 @@ pub const AddressParse = struct {
 
 pub fn parseAddress(data: []const u8) Error!AddressParse {
     if (data.len < 1) return error.NeedMore;
-    switch (@as(Atyp, @enumFromInt(data[0]))) {
+    switch (@as(Atyp, @fromBackingInt(@intCast(data[0])))) {
         .ipv4 => {
             if (data.len < 7) return error.NeedMore;
             return .{ .endpoint = .{ .addr = addr.Address.v4(data[1..5].*), .port = std.mem.readInt(u16, data[5..7], .big) }, .len = 7 };
@@ -190,7 +190,7 @@ pub fn parseReply(data: []const u8) Error!ReplyParse {
     if (data.len < 4) return error.NeedMore;
     if (data[0] != version or data[2] != 0) return error.Protocol;
     const a = try parseAddress(data[3..]);
-    const rep: Reply = @enumFromInt(data[1]);
+    const rep: Reply = @fromBackingInt(@intCast(data[1]));
     switch (rep) {
         .succeeded => {},
         .connection_refused => return error.Refused,

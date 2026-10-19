@@ -7,7 +7,7 @@ pub const Sink = *const fn (ctx: ?*anyopaque, level: Level, message: []const u8)
 
 var sink: ?Sink = null;
 var sink_ctx: ?*anyopaque = null;
-var max_level: std.atomic.Value(u8) = .init(@intFromEnum(Level.info));
+var max_level: std.atomic.Value(u8) = .init(@backingInt(Level.info));
 
 pub fn setSink(s: ?Sink, ctx: ?*anyopaque) void {
     sink = s;
@@ -15,19 +15,19 @@ pub fn setSink(s: ?Sink, ctx: ?*anyopaque) void {
 }
 
 pub fn setLevel(level: Level) void {
-    max_level.store(@intFromEnum(level), .release);
+    max_level.store(@backingInt(level), .release);
 }
 
 pub inline fn enabled(level: Level) bool {
-    if (@intFromEnum(level) > build_options.max_log_level) return false;
-    return @intFromEnum(level) <= max_level.load(.unordered);
+    if (@backingInt(level) > build_options.max_log_level) return false;
+    return @backingInt(level) <= max_level.load(.unordered);
 }
 
 pub fn emit(level: Level, comptime fmt: []const u8, args: anytype) void {
     if (!enabled(level)) return;
     const s = sink orelse return;
     var buf: [1024]u8 = undefined;
-    const msg = std.fmt.bufPrint(&buf, fmt, args) catch blk: {
+    const msg = std.mem.print(&buf, fmt, args) catch blk: {
         buf[buf.len - 3 ..].* = "...".*;
         break :blk buf[0..];
     };

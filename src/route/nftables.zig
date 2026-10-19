@@ -97,7 +97,7 @@ const Batch = struct {
     }
 
     fn end(b: *Batch) void {
-        std.mem.writeInt(u32, b.buf[b.msg_start..][0..4], @intCast(b.len - b.msg_start), builtin.cpu.arch.endian());
+        std.mem.writeInt(u32, b.buf[b.msg_start..][0..4], @intCast(b.len - b.msg_start), builtin.target.cpu.arch.endian());
     }
 
     fn attr(b: *Batch, kind: u16, bytes: []const u8) void {
@@ -132,7 +132,7 @@ const Batch = struct {
     fn close(b: *Batch) void {
         b.depth -= 1;
         const start = b.nests[b.depth];
-        std.mem.writeInt(u16, b.buf[start..][0..2], @intCast(b.len - start), builtin.cpu.arch.endian());
+        std.mem.writeInt(u16, b.buf[start..][0..2], @intCast(b.len - start), builtin.target.cpu.arch.endian());
     }
 
     fn data(b: *Batch, kind: u16, value: []const u8) void {
@@ -244,9 +244,9 @@ fn commit(fd: i32, b: *Batch) Error!void {
             const h = std.mem.bytesToValue(NlMsgHdr, rbuf[off..][0..@sizeOf(NlMsgHdr)]);
             if (h.len < @sizeOf(NlMsgHdr) or off + h.len > total) return error.NetlinkError;
             if (h.kind == nlmsg_error) {
-                const code = std.mem.readInt(i32, rbuf[off + @sizeOf(NlMsgHdr) ..][0..4], builtin.cpu.arch.endian());
+                const code = std.mem.readInt(i32, rbuf[off + @sizeOf(NlMsgHdr) ..][0..4], builtin.target.cpu.arch.endian());
                 if (code != 0) {
-                    const e: linux.E = @enumFromInt(-code);
+                    const e: linux.E = @fromBackingInt(@intCast(-code));
                     return switch (e) {
                         .PERM, .ACCES => error.PermissionDenied,
                         .EXIST => error.Exists,

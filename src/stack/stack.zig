@@ -37,7 +37,7 @@ pub fn dispatch(w: anytype, b: *pool.Buffer, vh: gso.VirtioNetHdr) void {
             w.pool.put(b);
             return;
         }
-        const whole = w.reasm.insert(&w.wheel, &w.pool, w.now(), b, pkt, @intFromEnum(timeouts.Kind.frag_expire)) orelse return;
+        const whole = w.reasm.insert(&w.wheel, &w.pool, w.now(), b, pkt, @backingInt(timeouts.Kind.frag_expire)) orelse return;
         w.counters.inc(.fragments_reassembled);
         const full = parse.parse(whole.bytes()) catch {
             w.pool.put(whole);

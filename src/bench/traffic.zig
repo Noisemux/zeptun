@@ -133,7 +133,7 @@ const StreamCtx = struct {
             return;
         };
         defer sys.close(fd);
-        var hdr = magic ++ [4]u8{ @intFromEnum(if (c.reverse) Mode.download else Mode.upload), 0, 0, 0 };
+        var hdr = magic ++ [4]u8{ @backingInt(if (c.reverse) Mode.download else Mode.upload), 0, 0, 0 };
         if (!writeFull(fd, &hdr)) {
             c.failed.store(true, .release);
             return;
@@ -489,7 +489,7 @@ const RrCtx = struct {
         const t0 = c.pace();
         const fd = connectVia(c.ep, c.socks) catch return false;
         defer sys.close(fd);
-        var hdr: [8]u8 = magic ++ [4]u8{ @intFromEnum(Mode.rr), 0, 0, 0 };
+        var hdr: [8]u8 = magic ++ [4]u8{ @backingInt(Mode.rr), 0, 0, 0 };
         std.mem.writeInt(u16, hdr[6..8], c.size, .big);
         const sz: usize = c.size;
         if (!writeFull(fd, &hdr) or !writeFull(fd, buf[0..sz]) or !readFull(fd, buf[0..sz])) return false;
@@ -514,7 +514,7 @@ const RrCtx = struct {
             return;
         };
         defer sys.close(fd);
-        var hdr: [8]u8 = magic ++ [4]u8{ @intFromEnum(Mode.rr), 0, 0, 0 };
+        var hdr: [8]u8 = magic ++ [4]u8{ @backingInt(Mode.rr), 0, 0, 0 };
         std.mem.writeInt(u16, hdr[6..8], c.size, .big);
         if (!writeFull(fd, &hdr)) {
             c.failed = true;
@@ -584,7 +584,7 @@ pub fn connScale(allocator: std.mem.Allocator, ep: addr.Endpoint, count: u32, ho
     const start = sys.monotonicNs();
     var ok: u32 = 0;
     var failed: u32 = 0;
-    const hdr = magic ++ [4]u8{ @intFromEnum(Mode.echo), 0, 0, 0 };
+    const hdr = magic ++ [4]u8{ @backingInt(Mode.echo), 0, 0, 0 };
     for (fds) |*fd| {
         const f = connectTcp(ep) catch {
             failed += 1;
@@ -735,7 +735,7 @@ const VerifySender = struct {
 pub fn verifyEcho(ep: addr.Endpoint, total: u64, seed: u64) !VerifyResult {
     const fd = try connectTcp(ep);
     defer sys.close(fd);
-    const hdr = magic ++ [4]u8{ @intFromEnum(Mode.echo), 0, 0, 0 };
+    const hdr = magic ++ [4]u8{ @backingInt(Mode.echo), 0, 0, 0 };
     if (!writeFull(fd, &hdr)) return error.HandshakeFailed;
     const start = sys.monotonicNs();
     var sender: VerifySender = .{ .fd = fd, .total = total, .seed = seed };
@@ -779,7 +779,7 @@ pub const MonitorResult = struct {
 
 fn readProcFile(path: []const u8, buf: []u8) ?[]const u8 {
     var pbuf: [128]u8 = undefined;
-    const z = std.fmt.bufPrintZ(&pbuf, "{s}", .{path}) catch return null;
+    const z = std.mem.printSentinel(&pbuf, "{s}", .{path}, 0) catch return null;
     const fd_rc = linux.open(z, .{ .ACCMODE = .RDONLY, .CLOEXEC = true }, 0);
     const fd = sys.linuxResult(fd_rc);
     if (fd < 0) return null;
@@ -796,9 +796,9 @@ fn readProcFile(path: []const u8, buf: []u8) ?[]const u8 {
 fn cpuTicks(pid: i32) ?u64 {
     var path: [64]u8 = undefined;
     var buf: [4096]u8 = undefined;
-    const p = std.fmt.bufPrint(&path, "/proc/{d}/stat", .{pid}) catch return null;
+    const p = std.mem.print(&path, "/proc/{d}/stat", .{pid}) catch return null;
     const text = readProcFile(p, &buf) orelse return null;
-    const close = std.mem.lastIndexOfScalar(u8, text, ')') orelse return null;
+    const close = std.mem.findScalarLast(u8, text, ')') orelse return null;
     var it = std.mem.tokenizeScalar(u8, text[close + 1 ..], ' ');
     var field: usize = 2;
     var utime: u64 = 0;
@@ -816,7 +816,7 @@ fn cpuTicks(pid: i32) ?u64 {
 fn statusKb(pid: i32, key: []const u8, file: []const u8) u64 {
     var path: [64]u8 = undefined;
     var buf: [16384]u8 = undefined;
-    const p = std.fmt.bufPrint(&path, "/proc/{d}/{s}", .{ pid, file }) catch return 0;
+    const p = std.mem.print(&path, "/proc/{d}/{s}", .{ pid, file }) catch return 0;
     const text = readProcFile(p, &buf) orelse return 0;
     var lines = std.mem.splitScalar(u8, text, '\n');
     while (lines.next()) |line| {

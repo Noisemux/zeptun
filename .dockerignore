@@ -2,6 +2,7 @@
 .github/
 .zig-cache/
 zig-out/
+zig-pkg/
 scripts/
 research/
 docs/

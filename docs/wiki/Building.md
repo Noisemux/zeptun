@@ -1,6 +1,6 @@
 # Building
 
-Zig 0.16.0 is the only requirement. There are no submodules and no vendored C libraries.
+Zig 0.17.0 is the only requirement. There are no submodules and no vendored C libraries.
 
 ## Unix
 
@@ -19,12 +19,12 @@ sudo make install
 | `/etc/zeptun/zeptun.toml` | sample configuration, never overwritten |
 | `$(PREFIX)/lib/systemd/system/zeptun.service` | hardened unit |
 
-`PREFIX`, `DESTDIR`, `OPTIMIZE`, `TARGET` and `CPU` are honoured: `make TARGET=aarch64-linux-musl OPTIMIZE=ReleaseSmall`.
+`PREFIX`, `DESTDIR`, `OPTIMIZE`, `TARGET` and `CPU` are honoured: `make TARGET=aarch64-linux-musl OPTIMIZE=small`.
 
 ## Zig directly
 
 ```sh
-zig build -Doptimize=ReleaseFast
+zig build -Doptimize=fast
 zig build cross
 ```
 
@@ -33,7 +33,7 @@ zig build cross
 | `zig build` | CLI, bench tool, static and shared library, header |
 | `zig build cross` | libraries for the whole target matrix in `zig-out/cross/<triple>` |
 | `zig build android` | `zig-out/android/jniLibs/<abi>/libzeptun.so` and static libraries for the NDK |
-| `zig build ios` | ReleaseSmall slices for the XCFramework |
+| `zig build ios` | small slices for the XCFramework |
 
 Feature flags trim the binary: `-Dipv6=false`, `-Dsocks5=false`, `-Droute=false`, `-Dicmp=false`, `-Dfragments=false`, `-Dsystem-stack=false`, `-Duserspace-tcp=false`, `-Dmobile=true`, `-Dstrip=true`.
 
@@ -51,12 +51,12 @@ Builds `libzeptun.so` and `libzeptun.a` for `armeabi-v7a`, `arm64-v8a`, `x86` an
 sh scripts/make_xcframework.sh
 ```
 
-Produces `zig-out/Zeptun.xcframework` with iOS device, iOS simulator and macOS slices. `Package.swift` exposes it to SwiftPM. See [Apple](Apple).
+Produces `zig-out/Zeptun.xcframework` with iOS device, iOS simulator and macOS slices. `Package.swift` exposes it to SwiftPM. The slices target macOS 15.0 and iOS 18.0, the oldest versions Zig 0.17 supports. See [Apple](Apple).
 
 ## Windows
 
 ```sh
-zig build -Dtarget=x86_64-windows-gnu -Doptimize=ReleaseFast
+zig build -Dtarget=x86_64-windows-gnu -Doptimize=fast
 make wintun
 ```
 
