@@ -5,16 +5,16 @@
 <text x="120" y="58" text-anchor="end" font-size="11" fill="#475569">zeptun</text>
 <rect x="128" y="46" width="123" height="13" rx="2" fill="#2563eb"/>
 <text x="259" y="59" font-size="11" fill="#0f172a">134 %</text>
-<text x="120" y="78" text-anchor="end" font-size="11" fill="#475569">sing-box system</text>
-<rect x="128" y="66" width="158" height="13" rx="2" fill="#94a3b8"/>
-<text x="294" y="79" font-size="11" fill="#0f172a">172 %</text>
-<text x="120" y="98" text-anchor="end" font-size="11" fill="#475569">hev-socks5-tunnel</text>
-<rect x="128" y="86" width="158" height="13" rx="2" fill="#94a3b8"/>
-<text x="294" y="99" font-size="11" fill="#0f172a">172 %</text>
+<text x="120" y="78" text-anchor="end" font-size="11" fill="#475569">hev-socks5-tunnel</text>
+<rect x="128" y="66" width="139" height="13" rx="2" fill="#94a3b8"/>
+<text x="275" y="79" font-size="11" fill="#0f172a">150 %</text>
+<text x="120" y="98" text-anchor="end" font-size="11" fill="#475569">sing-box system</text>
+<rect x="128" y="86" width="152" height="13" rx="2" fill="#94a3b8"/>
+<text x="288" y="99" font-size="11" fill="#0f172a">165 %</text>
 <text x="120" y="118" text-anchor="end" font-size="11" fill="#475569">sing-box gvisor</text>
-<rect x="128" y="106" width="183" height="13" rx="2" fill="#94a3b8"/>
-<text x="319" y="119" font-size="11" fill="#0f172a">199 %</text>
+<rect x="128" y="106" width="172" height="13" rx="2" fill="#94a3b8"/>
+<text x="308" y="119" font-size="11" fill="#0f172a">187 %</text>
 <text x="120" y="138" text-anchor="end" font-size="11" fill="#475569">tun2socks</text>
 <rect x="128" y="126" width="238" height="13" rx="2" fill="#94a3b8"/>
-<text x="374" y="139" font-size="11" fill="#0f172a">259 %</text>
+<text x="374" y="139" font-size="11" fill="#0f172a">257 %</text>
 </svg>
