@@ -218,7 +218,7 @@ pub fn System(comptime W: type) type {
                 if (!(th.flags.syn and !th.flags.ack)) return false;
                 const created = sy.nat_table.create(key, now) catch return false;
                 sy.relays[sy.nat_table.slotOf(created)] = .{};
-                created.timer = .{ .kind = @intFromEnum(timeouts.Kind.nat_expire) };
+                created.timer = .{ .kind = @backingInt(timeouts.Kind.nat_expire) };
                 w.wheel.schedule(&created.timer, now + sy.syn_timeout_ms);
                 w.counters.inc(.nat_active);
                 break :blk created;

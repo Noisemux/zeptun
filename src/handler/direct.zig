@@ -118,7 +118,7 @@ pub fn tcpRttUs(fd: sys.fd_t) ?u32 {
     var len: linux.socklen_t = info.len;
     const r = sys.linuxResult(linux.getsockopt(@intCast(fd), linux.IPPROTO.TCP, linux.TCP.INFO, &info, &len));
     if (r < 0 or len < 76) return null;
-    return std.mem.readInt(u32, info[68..72], builtin.cpu.arch.endian());
+    return std.mem.readInt(u32, info[68..72], builtin.target.cpu.arch.endian());
 }
 
 pub fn fastOpen(fd: sys.fd_t) void {
@@ -158,7 +158,7 @@ pub fn writeUdpSegmentCmsg(buf: []u8, gso_size: u16) usize {
     const hdr_len = @sizeOf(linux.cmsghdr);
     const h: linux.cmsghdr = .{ .len = hdr_len + 2, .level = linux.IPPROTO.UDP, .type = linux.UDP.SEGMENT };
     @memcpy(buf[0..hdr_len], std.mem.asBytes(&h));
-    std.mem.writeInt(u16, buf[hdr_len..][0..2], gso_size, builtin.cpu.arch.endian());
+    std.mem.writeInt(u16, buf[hdr_len..][0..2], gso_size, builtin.target.cpu.arch.endian());
     const total = std.mem.alignForward(usize, hdr_len + 2, @sizeOf(usize));
     @memset(buf[hdr_len + 2 .. total], 0);
     return total;
@@ -173,7 +173,7 @@ pub fn readUdpGro(control: []const u8) u16 {
         const h = std.mem.bytesToValue(linux.cmsghdr, control[off..][0..hdr_len]);
         if (h.len < hdr_len or off + h.len > control.len) break;
         if (h.level == linux.IPPROTO.UDP and h.type == linux.UDP.GRO and h.len >= hdr_len + 4) {
-            const v = std.mem.readInt(i32, control[off + hdr_len ..][0..4], builtin.cpu.arch.endian());
+            const v = std.mem.readInt(i32, control[off + hdr_len ..][0..4], builtin.target.cpu.arch.endian());
             return @intCast(std.math.clamp(v, 0, 0xffff));
         }
         off += std.mem.alignForward(usize, h.len, @sizeOf(usize));
@@ -191,6 +191,6 @@ test "cmsg roundtrip" {
     var gro: [64]u8 = @splat(0);
     const h: linux.cmsghdr = .{ .len = hdr_len + 4, .level = linux.IPPROTO.UDP, .type = linux.UDP.GRO };
     @memcpy(gro[0..hdr_len], std.mem.asBytes(&h));
-    std.mem.writeInt(i32, gro[hdr_len..][0..4], 1200, builtin.cpu.arch.endian());
+    std.mem.writeInt(i32, gro[hdr_len..][0..4], 1200, builtin.target.cpu.arch.endian());
     try std.testing.expectEqual(@as(u16, 1200), readUdpGro(&gro));
 }

@@ -542,7 +542,7 @@ test "parse ipv6 with extension and fragment headers" {
 
 test "parse rejects truncated and malformed" {
     try std.testing.expectError(error.Truncated, parse(&[_]u8{0x45}));
-    try std.testing.expectError(error.BadVersion, parse(&([_]u8{0x55} ++ [_]u8{0} ** 39)));
+    try std.testing.expectError(error.BadVersion, parse(&([_]u8{0x55} ++ @as([39]u8, @splat(0)))));
     var b: [40]u8 = @splat(0);
     b[0] = 0x44;
     try std.testing.expectError(error.BadHeaderLength, parse(&b));

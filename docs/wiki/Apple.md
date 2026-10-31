@@ -6,7 +6,7 @@
 sh scripts/make_xcframework.sh
 ```
 
-Produces `zig-out/Zeptun.xcframework` with three slices: iOS device (`arm64`), iOS simulator (`arm64`, `x86_64`) and macOS. `Package.swift` exposes the framework as a binary target, so a Swift package or an Xcode project can depend on the repository directly.
+Produces `zig-out/Zeptun.xcframework` with three slices: iOS device (`arm64`), iOS simulator (`arm64`, `x86_64`) and macOS. `Package.swift` exposes the framework as a binary target, so a Swift package or an Xcode project can depend on the repository directly. The slices target macOS 15.0 and iOS 18.0, the oldest versions Zig 0.17 supports.
 
 ```swift
 .binaryTarget(name: "Zeptun", path: "zig-out/Zeptun.xcframework")

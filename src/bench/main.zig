@@ -59,8 +59,8 @@ const Args = struct {
 fn writeJson(io: std.Io, path: ?[]const u8, comptime fmt: []const u8, args: anytype) !void {
     const p = path orelse return;
     var buf: [4096]u8 = undefined;
-    const text = try std.fmt.bufPrint(&buf, fmt, args);
-    if (std.fs.path.dirname(p)) |dir| std.Io.Dir.cwd().createDirPath(io, dir) catch {};
+    const text = try std.mem.print(&buf, fmt, args);
+    if (std.Io.Dir.path.dirname(p)) |dir| std.Io.Dir.cwd().createDirPath(io, dir) catch {};
     try std.Io.Dir.cwd().writeFile(io, .{ .sub_path = p, .data = text });
 }
 

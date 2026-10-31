@@ -41,7 +41,7 @@ pub const Counter = enum(u8) {
     udp_migrated,
 };
 
-pub const count = @typeInfo(Counter).@"enum".fields.len;
+pub const count = @typeInfo(Counter).@"enum".field_names.len;
 
 pub const wide_atomics = @bitSizeOf(usize) >= 64;
 
@@ -80,7 +80,7 @@ pub const Counters = struct {
     values: [count]Cell align(std.atomic.cache_line) = @splat(.init(0)),
 
     pub inline fn add(c: *Counters, comptime which: Counter, n: u64) void {
-        const v = &c.values[@intFromEnum(which)];
+        const v = &c.values[@backingInt(which)];
         cellStore(v, cellOwnerLoad(v) +% n);
     }
 
@@ -89,17 +89,18 @@ pub const Counters = struct {
     }
 
     pub inline fn dec(c: *Counters, comptime which: Counter) void {
-        const v = &c.values[@intFromEnum(which)];
+        const v = &c.values[@backingInt(which)];
         cellStore(v, cellOwnerLoad(v) -% 1);
     }
 
     pub inline fn get(c: *const Counters, which: Counter) u64 {
-        return cellRead(&c.values[@intFromEnum(which)]);
+        return cellRead(&c.values[@backingInt(which)]);
     }
 
     pub fn snapshotInto(c: *const Counters, s: *Snapshot) void {
-        inline for (@typeInfo(Counter).@"enum".fields) |f| {
-            @field(s, f.name) +%= cellRead(&c.values[f.value]);
+        const a = @typeInfo(Counter).@"enum";
+        inline for (a.field_names, a.field_values) |name, value| {
+            @field(s, name) +%= cellRead(&c.values[@as(usize, @intCast(value))]);
         }
     }
 };
@@ -107,15 +108,15 @@ pub const Counters = struct {
 pub const Snapshot = blk: {
     var names: [count + 2][]const u8 = undefined;
     var types: [count + 2]type = undefined;
-    var attrs: [count + 2]std.builtin.Type.StructField.Attributes = undefined;
+    var attrs: [count + 2]std.lang.Type.Struct.FieldAttributes = undefined;
     names[0] = "version";
     types[0] = u32;
     attrs[0] = .{ .default_value_ptr = &@as(u32, 3) };
     names[1] = "workers";
     types[1] = u32;
     attrs[1] = .{ .default_value_ptr = &@as(u32, 0) };
-    for (@typeInfo(Counter).@"enum".fields, 0..) |f, i| {
-        names[i + 2] = f.name;
+    for (@typeInfo(Counter).@"enum".field_names, 0..) |name, i| {
+        names[i + 2] = name;
         types[i + 2] = u64;
         attrs[i + 2] = .{ .default_value_ptr = &@as(u64, 0) };
     }

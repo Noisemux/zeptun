@@ -7,10 +7,10 @@ const Engine = zeptun.Engine;
 const sys = zeptun.io.sys;
 const file = zeptun.io.file;
 
-pub const panic = if (builtin.mode == .Debug or builtin.mode == .ReleaseSafe) std.debug.FullPanic(std.debug.defaultPanic) else std.debug.FullPanic(rawPanic);
+pub const panic = if (builtin.mode == .debug or builtin.mode == .safe) std.debug.FullPanic(std.debug.defaultPanic) else std.debug.FullPanic(rawPanic);
 
 pub const std_options: std.Options = .{
-    .signal_stack_size = if (builtin.mode == .Debug or builtin.mode == .ReleaseSafe) 1 << 18 else null,
+    .signal_stack_size = if (builtin.mode == .debug or builtin.mode == .safe) 1 << 18 else null,
 };
 
 fn rawPanic(msg: []const u8, ra: ?usize) noreturn {
@@ -45,7 +45,7 @@ const LogFile = struct {
         const h = handle orelse return;
         var buf: [2048]u8 = undefined;
         const body = message[0..@min(message.len, buf.len - 32)];
-        const line = std.fmt.bufPrint(&buf, "zeptun [{t}] {s}\n", .{ level, body }) catch return;
+        const line = std.mem.print(&buf, "zeptun [{t}] {s}\n", .{ level, body }) catch return;
         file.writeAll(h, line) catch {};
     }
 };
@@ -53,9 +53,9 @@ const LogFile = struct {
 const ExitStatus = union(enum) { exited: u32, abnormal };
 
 fn spawnWait(arena: std.mem.Allocator, script: []const u8, ifname: []const u8) !ExitStatus {
-    if (builtin.os.tag == .windows) {
+    if (builtin.target.os.tag == .windows) {
         const w = sys.windows;
-        const line = try std.fmt.allocPrint(arena, "cmd.exe /c \"{s}\" {s}", .{ script, ifname });
+        const line = try arena.print("cmd.exe /c \"{s}\" {s}", .{ script, ifname });
         const line_w = try std.unicode.wtf8ToWtf16LeAllocZ(arena, line);
         var si: w.STARTUPINFOW = .{};
         var pi: w.PROCESS_INFORMATION = .{};
@@ -67,10 +67,10 @@ fn spawnWait(arena: std.mem.Allocator, script: []const u8, ifname: []const u8) !
         if (w.kernel32.GetExitCodeProcess(pi.hProcess.?, &code) == 0) return .abnormal;
         return .{ .exited = code };
     }
-    const argv = [_:null]?[*:0]const u8{ "/bin/sh", try arena.dupeZ(u8, script), try arena.dupeZ(u8, ifname) };
+    const argv = [_:null]?[*:0]const u8{ "/bin/sh", try arena.dupeSentinel(u8, script, 0), try arena.dupeSentinel(u8, ifname, 0) };
     const envp: [*:null]const ?[*:0]const u8 = environ.block.slice.ptr;
-    var status: u32 = 0;
-    if (builtin.os.tag == .linux) {
+    var status: i32 = 0;
+    if (builtin.target.os.tag == .linux) {
         const linux = std.os.linux;
         const rc = sys.linuxResult(linux.fork());
         if (rc < 0) return error.SpawnFailed;
@@ -92,12 +92,12 @@ fn spawnWait(arena: std.mem.Allocator, script: []const u8, ifname: []const u8) !
         }
         var st: c_int = 0;
         while (std.c.waitpid(pid, &st, 0) < 0) {
-            if (std.c._errno().* != @intFromEnum(std.c.E.INTR)) return error.SpawnFailed;
+            if (std.c._errno().* != @backingInt(std.c.E.INTR)) return error.SpawnFailed;
         }
         status = @bitCast(st);
     }
     if (status & 0x7f != 0) return .abnormal;
-    return .{ .exited = (status >> 8) & 0xff };
+    return .{ .exited = @intCast((status >> 8) & 0xff) };
 }
 
 fn runScript(arena: std.mem.Allocator, script: []const u8, ifname: []const u8) void {
@@ -120,7 +120,7 @@ fn stderrSink(_: ?*anyopaque, level: zeptun.log.Level, message: []const u8) void
 }
 
 fn installSignals() void {
-    if (builtin.os.tag == .windows) {
+    if (builtin.target.os.tag == .windows) {
         const Console = struct {
             fn onControl(ctrl_type: u32) callconv(.winapi) sys.windows.BOOL {
                 requestStop();
@@ -145,10 +145,10 @@ fn installSignals() void {
     std.posix.sigaction(.PIPE, &act, null);
 }
 
-var debug_allocator: std.heap.DebugAllocator(.{}) = .init;
+var safe_allocator = std.heap.SafeAllocator.init(std.heap.page_allocator, .{});
 
 fn engineAllocator() std.mem.Allocator {
-    return if (builtin.mode == .Debug) debug_allocator.allocator() else std.heap.page_allocator;
+    return if (builtin.mode == .debug) safe_allocator.allocator() else std.heap.page_allocator;
 }
 
 pub fn main(init: std.process.Init.Minimal) u8 {
@@ -172,7 +172,7 @@ pub fn main(init: std.process.Init.Minimal) u8 {
             return 0;
         },
         .version => {
-            file.print(.out, "zeptun {s} zig {s} {t}-{t}\n", .{ zeptun.version, builtin.zig_version_string, builtin.cpu.arch, builtin.os.tag });
+            file.print(.out, "zeptun {s} zig {s} {t}-{t}\n", .{ zeptun.version, builtin.zig_version_string, builtin.target.cpu.arch, builtin.target.os.tag });
             return 0;
         },
         .probe => return probe(&parsed),
@@ -203,8 +203,8 @@ pub fn main(init: std.process.Init.Minimal) u8 {
     defer global_engine.store(null, .release);
     if (parsed.st.pid_file) |path| {
         var buf: [32]u8 = undefined;
-        const pid: i64 = if (builtin.os.tag == .linux) std.os.linux.getpid() else if (builtin.os.tag == .windows) sys.windows.kernel32.GetCurrentProcessId() else std.c.getpid();
-        const text = std.fmt.bufPrint(&buf, "{d}\n", .{pid}) catch unreachable;
+        const pid: i64 = if (builtin.target.os.tag == .linux) std.os.linux.getpid() else if (builtin.target.os.tag == .windows) sys.windows.kernel32.GetCurrentProcessId() else std.c.getpid();
+        const text = std.mem.print(&buf, "{d}\n", .{pid}) catch unreachable;
         file.writeFile(path, text) catch |err| {
             file.print(.err, "zeptun: cannot write pid file {s}: {t}\n", .{ path, err });
             return 2;
@@ -288,7 +288,7 @@ fn probe(parsed: *const args.Parsed) u8 {
     file.print(.out, "cpus: {d}\n", .{sys.cpuCount()});
     file.print(.out, "io_uring: {s}\n", .{if (zeptun.io.IoUring != void and zeptun.io.available(.io_uring)) "available" else "unavailable"});
     file.print(.out, "epoll: {s}\n", .{if (zeptun.io.Epoll != void) "available" else "unavailable"});
-    if (builtin.os.tag != .linux) return 0;
+    if (builtin.target.os.tag != .linux) return 0;
     var t = zeptun.device.linux.Tun.open(.{
         .name = parsed.st.cfg.device.name.slice(),
         .queues = 2,

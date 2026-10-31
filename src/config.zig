@@ -61,7 +61,7 @@ pub const UidRange = struct {
     end: u32,
 
     pub fn parse(text: []const u8) !UidRange {
-        const sep = std.mem.indexOfAny(u8, text, "-:");
+        const sep = std.mem.findAny(u8, text, "-:");
         const a = std.fmt.parseInt(u32, if (sep) |s| text[0..s] else text, 0) catch return error.InvalidArgument;
         const b = if (sep) |s| std.fmt.parseInt(u32, text[s + 1 ..], 0) catch return error.InvalidArgument else a;
         if (b < a) return error.InvalidArgument;
@@ -76,7 +76,7 @@ pub const PackageList = struct {
     len: u16 = 0,
 
     pub fn append(l: *PackageList, name: []const u8) !void {
-        if (name.len == 0 or std.mem.indexOfAny(u8, name, " \n\t") != null) return error.InvalidArgument;
+        if (name.len == 0 or std.mem.findAny(u8, name, " \n\t") != null) return error.InvalidArgument;
         if (l.len + name.len + 1 > l.buf.len) return error.LimitExceeded;
         @memcpy(l.buf[l.len..][0..name.len], name);
         l.buf[l.len + name.len] = '\n';
@@ -361,8 +361,8 @@ pub const RouteConfig = struct {
     auto_route: bool = false,
     table: u32 = 2022,
     rule_priority: u32 = 9000,
-    fwmark: u32 = if (builtin.abi.isAndroid()) 0x200000 else 0x2022,
-    fwmark_mask: u32 = if (builtin.abi.isAndroid()) 0x200000 else 0xffff_ffff,
+    fwmark: u32 = if (builtin.target.abi.isAndroid()) 0x200000 else 0x2022,
+    fwmark_mask: u32 = if (builtin.target.abi.isAndroid()) 0x200000 else 0xffff_ffff,
     include_packages: PackageList = .{},
     exclude_packages: PackageList = .{},
     android_users: UidList = .{},
@@ -416,7 +416,7 @@ pub const Config = struct {
         return switch (c.io.monitor_network) {
             .on => true,
             .off => false,
-            .auto => c.device.kind == .tun and c.device.configure and !builtin.abi.isAndroid(),
+            .auto => c.device.kind == .tun and c.device.configure and !builtin.target.abi.isAndroid(),
         };
     }
 
@@ -503,7 +503,7 @@ pub const Config = struct {
         if (c.stack.mode != .userspace and c.device.kind == .external) return error.InvalidArgument;
         if (c.stack.mode != .userspace and c.device.address4 == null and c.device.address6 == null) return error.InvalidArgument;
         if (c.route.auto_redirect and (!c.route.auto_route or c.device.kind != .tun)) return error.InvalidArgument;
-        if (c.route.auto_redirect and builtin.os.tag != .linux) return error.NotSupported;
+        if (c.route.auto_redirect and builtin.target.os.tag != .linux) return error.NotSupported;
         if (c.route.auto_redirect and !build_options.enable_system_stack) return error.NotSupported;
         if (c.dns.fake_ip and c.handler.kind != .socks5) return error.InvalidArgument;
         if (c.dns.fake_ip and c.dns.fake_range4 == null and c.dns.fake_range6 == null) return error.InvalidArgument;

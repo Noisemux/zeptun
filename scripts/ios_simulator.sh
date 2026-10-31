@@ -12,7 +12,7 @@ case "$ARCH" in
 esac
 
 cd "$ROOT"
-zig build ios -Doptimize=ReleaseSmall
+zig build ios -Doptimize=small
 mkdir -p "$OUT"
 
 xcrun --sdk iphonesimulator clang \

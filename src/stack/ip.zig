@@ -258,7 +258,7 @@ pub const Reassembler = struct {
                     r.release(wheel, p, index);
                     return null;
                 }
-                std.mem.copyBackwards(u8, buf.ptr[base + unfrag_len ..][0..shift_len], buf.ptr[base + d.header_len ..][0..shift_len]);
+                @memmove(buf.ptr[base + unfrag_len ..][0..shift_len], buf.ptr[base + d.header_len ..][0..shift_len]);
             }
             @memcpy(buf.ptr[base..][0..unfrag_len], data[0..unfrag_len]);
             d.header_len = @intCast(unfrag_len);

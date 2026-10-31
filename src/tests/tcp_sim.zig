@@ -144,7 +144,7 @@ const SimWorker = struct {
     }
 
     fn onTimer(w: *SimWorker, t: *timeouts.Timer) void {
-        switch (@as(timeouts.Kind, @enumFromInt(t.kind))) {
+        switch (@as(timeouts.Kind, @fromBackingInt(@intCast(t.kind)))) {
             .tcp_rto, .tcp_persist, .tcp_life, .tcp_delack => w.tcp.onTimer(w, t),
             else => {},
         }
@@ -652,32 +652,32 @@ const Chooser = union(enum) {
     smith: *std.testing.Smith,
     prng: *std.Random.DefaultPrng,
 
-    fn hashOf(src: std.builtin.SourceLocation) u32 {
+    fn hashOf(src: std.lang.SourceLocation) u32 {
         return (@as(u32, src.line) *% 0x9e37_79b1) ^ src.column;
     }
 
-    fn range(ch: Chooser, comptime T: type, lo: T, hi: T, src: std.builtin.SourceLocation) T {
+    fn range(ch: Chooser, comptime T: type, lo: T, hi: T, src: std.lang.SourceLocation) T {
         return switch (ch) {
             .smith => |s| s.valueRangeAtMostWithHash(T, lo, hi, hashOf(src)),
             .prng => |p| p.random().intRangeAtMost(T, lo, hi),
         };
     }
 
-    fn flag(ch: Chooser, src: std.builtin.SourceLocation) bool {
+    fn flag(ch: Chooser, src: std.lang.SourceLocation) bool {
         return switch (ch) {
             .smith => |s| s.valueWithHash(bool, hashOf(src)),
             .prng => |p| p.random().boolean(),
         };
     }
 
-    fn full(ch: Chooser, comptime T: type, src: std.builtin.SourceLocation) T {
+    fn full(ch: Chooser, comptime T: type, src: std.lang.SourceLocation) T {
         return switch (ch) {
             .smith => |s| s.valueWithHash(T, hashOf(src)),
             .prng => |p| p.random().int(T),
         };
     }
 
-    fn stop(ch: Chooser, src: std.builtin.SourceLocation) bool {
+    fn stop(ch: Chooser, src: std.lang.SourceLocation) bool {
         return switch (ch) {
             .smith => |s| s.eosWithHash(hashOf(src)),
             .prng => |p| p.random().uintLessThan(u32, 2500) == 0,

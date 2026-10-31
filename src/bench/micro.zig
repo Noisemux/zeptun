@@ -38,7 +38,7 @@ const Runner = struct {
 
     fn run(r: *Runner, group: []const u8, name: []const u8, bytes_per_op: u64, ctx: anytype, comptime f: fn (@TypeOf(ctx)) void) !void {
         if (r.opts.filter) |flt| {
-            if (std.mem.indexOf(u8, name, flt) == null) return;
+            if (std.mem.find(u8, name, flt) == null) return;
         }
         var warm: u32 = 0;
         while (warm < 1000) : (warm += 1) f(ctx);
@@ -218,7 +218,7 @@ pub fn runAll(allocator: std.mem.Allocator, io: std.Io, opts: Options) !u8 {
     for (sizes) |sz| {
         for ([_]checksum.Impl{ .scalar, .simd }) |impl| {
             const ctx: ChecksumCtx = .{ .data = data[0..sz], .impl = impl };
-            const name = try std.fmt.allocPrint(allocator, "checksum/{t}/{d}", .{ impl, sz });
+            const name = try allocator.print("checksum/{t}/{d}", .{ impl, sz });
             try r.run("checksum", name, sz, &ctx, ChecksumCtx.call);
         }
     }
@@ -283,7 +283,7 @@ pub fn runAll(allocator: std.mem.Allocator, io: std.Io, opts: Options) !u8 {
 }
 
 fn ensureParent(io: std.Io, path: []const u8) void {
-    if (std.fs.path.dirname(path)) |dir| {
+    if (std.Io.Dir.path.dirname(path)) |dir| {
         std.Io.Dir.cwd().createDirPath(io, dir) catch {};
     }
 }
@@ -298,7 +298,7 @@ fn writeJson(allocator: std.mem.Allocator, io: std.Io, path: []const u8, results
     var out: std.Io.Writer.Allocating = .init(allocator);
     defer out.deinit();
     const w = &out.writer;
-    try w.print("{{\n  \"tool\": \"zeptun-bench\",\n  \"version\": \"{s}\",\n  \"zig\": \"{s}\",\n  \"arch\": \"{t}\",\n  \"os\": \"{t}\",\n  \"cpus\": {d},\n  \"results\": [\n", .{ zeptun.version, builtin.zig_version_string, builtin.cpu.arch, builtin.os.tag, sys.cpuCount() });
+    try w.print("{{\n  \"tool\": \"zeptun-bench\",\n  \"version\": \"{s}\",\n  \"zig\": \"{s}\",\n  \"arch\": \"{t}\",\n  \"os\": \"{t}\",\n  \"cpus\": {d},\n  \"results\": [\n", .{ zeptun.version, builtin.zig_version_string, builtin.target.cpu.arch, builtin.target.os.tag, sys.cpuCount() });
     for (results, 0..) |res, i| {
         try w.print("    {{\"name\": \"{s}\", \"group\": \"{s}\", \"ns_per_op\": {d:.3}, \"ops_per_sec\": {d:.1}, \"mb_per_sec\": {d:.2}, \"bytes_per_op\": {d}}}{s}\n", .{ res.name, res.group, res.ns_per_op, res.ops_per_sec, res.mb_per_sec, res.bytes_per_op, if (i + 1 < results.len) "," else "" });
     }
@@ -310,7 +310,7 @@ fn writeMarkdown(allocator: std.mem.Allocator, io: std.Io, path: []const u8, res
     var out: std.Io.Writer.Allocating = .init(allocator);
     defer out.deinit();
     const w = &out.writer;
-    try w.print("# zeptun-bench micro ({t}-{t}, {d} cpus)\n\n| benchmark | ns/op | ops/s | MB/s |\n|---|---:|---:|---:|\n", .{ builtin.cpu.arch, builtin.os.tag, sys.cpuCount() });
+    try w.print("# zeptun-bench micro ({t}-{t}, {d} cpus)\n\n| benchmark | ns/op | ops/s | MB/s |\n|---|---:|---:|---:|\n", .{ builtin.target.cpu.arch, builtin.target.os.tag, sys.cpuCount() });
     for (results) |res| {
         if (res.bytes_per_op > 0) {
             try w.print("| {s} | {d:.2} | {d:.0} | {d:.1} |\n", .{ res.name, res.ns_per_op, res.ops_per_sec, res.mb_per_sec });

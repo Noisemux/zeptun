@@ -1,7 +1,7 @@
 const std = @import("std");
 const builtin = @import("builtin");
 
-pub const native_endian = builtin.cpu.arch.endian();
+pub const native_endian = builtin.target.cpu.arch.endian();
 
 pub const Impl = enum { scalar, simd };
 
@@ -64,7 +64,7 @@ pub fn sumSimd(data: []const u8, initial: u64) u64 {
             i += block_bytes;
             blocks += 1;
         }) {
-            const words: @Vector(block_words, u16) = @bitCast(data[i..][0..block_bytes].*);
+            const words: @Vector(block_words, u16) = std.mem.bytesToValue(@Vector(block_words, u16), data[i..][0..block_bytes]);
             lanes += @as(@Vector(block_words, u32), words);
         }
         const wide: @Vector(block_words, u64) = lanes;

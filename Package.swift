@@ -3,7 +3,7 @@ import PackageDescription
 
 let package = Package(
     name: "Zeptun",
-    platforms: [.iOS(.v15), .macOS(.v12)],
+    platforms: [.iOS(.v18), .macOS(.v15)],
     products: [
         .library(name: "Zeptun", targets: ["Zeptun"]),
     ],

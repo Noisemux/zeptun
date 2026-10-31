@@ -11,7 +11,7 @@ concurrency:
   cancel-in-progress: false
 
 env:
-  ZIG_VERSION: 0.16.0
+  ZIG_VERSION: 0.17.0
 
 jobs:
   source:
@@ -71,7 +71,7 @@ jobs:
         with:
           version: ${{ env.ZIG_VERSION }}
       - name: build
-        run: zig build -Dtarget=${{ matrix.target }} -Doptimize=ReleaseFast -Dstrip=true
+        run: zig build -Dtarget=${{ matrix.target }} -Doptimize=fast -Dstrip=true
       - name: stage
         run: |
           mkdir -p out
@@ -84,7 +84,7 @@ jobs:
           if-no-files-found: error
 
   macos:
-    runs-on: macos-14
+    runs-on: macos-15
     steps:
       - uses: actions/checkout@v7
       - uses: mlugg/setup-zig@v2
@@ -92,9 +92,9 @@ jobs:
           version: ${{ env.ZIG_VERSION }}
       - name: build slices
         run: |
-          zig build -Dtarget=x86_64-macos -Doptimize=ReleaseFast -Dstrip=true
+          zig build -Dtarget=x86_64-macos -Doptimize=fast -Dstrip=true
           cp zig-out/bin/zeptun zeptun-x86_64
-          zig build -Dtarget=aarch64-macos -Doptimize=ReleaseFast -Dstrip=true
+          zig build -Dtarget=aarch64-macos -Doptimize=fast -Dstrip=true
           cp zig-out/bin/zeptun zeptun-arm64
       - name: merge universal
         run: |
@@ -125,7 +125,7 @@ jobs:
         with:
           version: ${{ env.ZIG_VERSION }}
       - name: build
-        run: zig build -Dtarget=${{ matrix.target }} -Doptimize=ReleaseFast -Dstrip=true
+        run: zig build -Dtarget=${{ matrix.target }} -Doptimize=fast -Dstrip=true
       - name: stage
         run: |
           mkdir -p zeptun-win-${{ matrix.name }}
@@ -149,7 +149,7 @@ jobs:
         with:
           version: ${{ env.ZIG_VERSION }}
       - name: build
-        run: zig build -Dtarget=x86_64-freebsd -Doptimize=ReleaseFast -Dstrip=true
+        run: zig build -Dtarget=x86_64-freebsd -Doptimize=fast -Dstrip=true
       - name: stage
         run: |
           mkdir -p out
@@ -188,7 +188,7 @@ jobs:
           if-no-files-found: error
 
   apple:
-    runs-on: macos-14
+    runs-on: macos-15
     steps:
       - uses: actions/checkout@v7
       - uses: mlugg/setup-zig@v2

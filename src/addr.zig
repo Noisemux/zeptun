@@ -120,7 +120,7 @@ pub const Prefix = struct {
     bits: u8 = 0,
 
     pub fn parse(text: []const u8) !Prefix {
-        const slash = std.mem.indexOfScalar(u8, text, '/');
+        const slash = std.mem.findScalar(u8, text, '/');
         const a = try Address.parse(if (slash) |s| text[0..s] else text);
         const max: u8 = if (a.family == .v4) 32 else 128;
         const bits = if (slash) |s| std.fmt.parseInt(u8, text[s + 1 ..], 10) catch return error.InvalidPrefix else max;
@@ -177,12 +177,12 @@ pub const Prefix = struct {
 test "address parse and format" {
     var buf: [64]u8 = undefined;
     const a = try Address.parse("172.19.0.1");
-    try std.testing.expectEqualStrings("172.19.0.1", try std.fmt.bufPrint(&buf, "{f}", .{a}));
+    try std.testing.expectEqualStrings("172.19.0.1", try std.mem.print(&buf, "{f}", .{a}));
     const b = try Address.parse("fdfe:dcba:9876::1");
-    try std.testing.expectEqualStrings("fdfe:dcba:9876::1", try std.fmt.bufPrint(&buf, "{f}", .{b}));
+    try std.testing.expectEqualStrings("fdfe:dcba:9876::1", try std.mem.print(&buf, "{f}", .{b}));
     const e = try Endpoint.parse("[::1]:1080");
     try std.testing.expectEqual(@as(u16, 1080), e.port);
-    try std.testing.expectEqualStrings("[::1]:1080", try std.fmt.bufPrint(&buf, "{f}", .{e}));
+    try std.testing.expectEqualStrings("[::1]:1080", try std.mem.print(&buf, "{f}", .{e}));
     const e4 = try Endpoint.parse("127.0.0.1:9000");
     try std.testing.expect(e4.addr.family == .v4 and e4.port == 9000);
 }

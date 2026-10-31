@@ -30,7 +30,7 @@ permissions:
   contents: write
 
 env:
-  ZIG_VERSION: 0.16.0
+  ZIG_VERSION: 0.17.0
 
 jobs:
   compare:
@@ -75,7 +75,7 @@ jobs:
           sudo modprobe tun || true
 
       - name: build
-        run: zig build -Doptimize=ReleaseFast
+        run: zig build -Doptimize=fast
 
       - name: throughput, latency and udp
         env:

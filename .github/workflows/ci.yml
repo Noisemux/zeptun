@@ -11,7 +11,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  ZIG_VERSION: 0.16.0
+  ZIG_VERSION: 0.17.0
 
 jobs:
   linux:
@@ -24,7 +24,7 @@ jobs:
       - name: unit tests debug
         run: zig build test --summary all
       - name: unit tests release safe
-        run: zig build test -Doptimize=ReleaseSafe --summary all
+        run: zig build test -Doptimize=safe --summary all
       - name: c abi smoke test
         run: zig build test-ffi
       - name: mobile feature set
@@ -38,7 +38,7 @@ jobs:
       - name: tests inside network namespace
         run: zig build test-netns
       - name: end to end integration
-        run: zig build test-integration -Doptimize=ReleaseSafe
+        run: zig build test-integration -Doptimize=safe
 
   cross:
     runs-on: ubuntu-24.04
@@ -68,7 +68,7 @@ jobs:
         with:
           version: ${{ env.ZIG_VERSION }}
       - name: build
-        run: zig build -Dtarget=${{ matrix.target }} -Doptimize=ReleaseFast -Dstrip=true
+        run: zig build -Dtarget=${{ matrix.target }} -Doptimize=fast -Dstrip=true
       - name: compile tests
         if: ${{ !contains(matrix.target, 'android') && !contains(matrix.target, 'ios') }}
         run: zig build test-compile -Dtarget=${{ matrix.target }}
@@ -88,7 +88,7 @@ jobs:
         with:
           version: ${{ env.ZIG_VERSION }}
       - name: build jniLibs
-        run: zig build android -Doptimize=ReleaseSmall
+        run: zig build android -Doptimize=small
       - name: check 16 KB page alignment
         run: |
           for so in zig-out/android/jniLibs/*/libzeptun.so; do
@@ -102,7 +102,7 @@ jobs:
           path: zig-out/android
 
   macos:
-    runs-on: macos-14
+    runs-on: macos-15
     steps:
       - uses: actions/checkout@v7
       - uses: mlugg/setup-zig@v2
@@ -125,7 +125,7 @@ jobs:
         with:
           version: ${{ env.ZIG_VERSION }}
       - name: build
-        run: zig build -Doptimize=ReleaseFast
+        run: zig build -Doptimize=fast
       - name: tunnel through a real utun device
         env:
           LOG_DIR: ${{ github.workspace }}/macos-logs
@@ -161,7 +161,7 @@ jobs:
       - name: unit tests
         run: zig build test --summary all
       - name: release build
-        run: zig build -Doptimize=ReleaseFast
+        run: zig build -Doptimize=fast
 
   bench-gate:
     if: github.event_name == 'pull_request'
@@ -178,14 +178,14 @@ jobs:
         run: |
           git worktree add "$RUNNER_TEMP/base" "${{ github.event.pull_request.base.sha }}"
           cd "$RUNNER_TEMP/base"
-          zig build bench -Doptimize=ReleaseFast -- --min-ms 600
+          zig build bench -Doptimize=fast -- --min-ms 600
           cp zig-out/bench/micro.json "$GITHUB_WORKSPACE/micro-base.json"
       - name: candidate against baseline
         run: |
           if [ -f micro-base.json ]; then
-            zig build bench -Doptimize=ReleaseFast -- --min-ms 600 --baseline micro-base.json --max-regression 20
+            zig build bench -Doptimize=fast -- --min-ms 600 --baseline micro-base.json --max-regression 20
           else
-            zig build bench -Doptimize=ReleaseFast -- --min-ms 600
+            zig build bench -Doptimize=fast -- --min-ms 600
           fi
       - name: summary
         if: always()
@@ -207,7 +207,7 @@ jobs:
         with:
           version: ${{ env.ZIG_VERSION }}
       - name: microbenchmarks
-        run: zig build bench -Doptimize=ReleaseFast -- --min-ms 600
+        run: zig build bench -Doptimize=fast -- --min-ms 600
       - name: summary
         run: cat zig-out/bench/micro.md >> "$GITHUB_STEP_SUMMARY"
       - uses: actions/upload-artifact@v7

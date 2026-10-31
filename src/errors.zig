@@ -77,8 +77,8 @@ pub fn fromError(err: anyerror) Code {
 }
 
 test "codes are stable" {
-    try std.testing.expectEqual(@as(c_int, 0), @intFromEnum(Code.ok));
-    try std.testing.expectEqual(@as(c_int, -99), @intFromEnum(Code.unknown));
+    try std.testing.expectEqual(@as(c_int, 0), @backingInt(Code.ok));
+    try std.testing.expectEqual(@as(c_int, -99), @backingInt(Code.unknown));
     try std.testing.expectEqual(Code.permission_denied, fromError(error.PermissionDenied));
     try std.testing.expectEqual(Code.unknown, Code.fromInt(-1234));
     try std.testing.expectEqualStrings("timeout", Code.timeout.message());

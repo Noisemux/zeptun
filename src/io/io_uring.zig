@@ -428,7 +428,7 @@ pub fn Impl(comptime Outer: type) type {
                 return;
             }
             const c: *Completion = @ptrFromInt(@as(usize, @intCast(ud)));
-            var res: i32 = if (cqe.res < 0) sys.mapErrno(@as(linux.E, @enumFromInt(-cqe.res))).result() else cqe.res;
+            var res: i32 = if (cqe.res < 0) sys.mapErrno(@as(linux.E, @fromBackingInt(@intCast(-cqe.res)))).result() else cqe.res;
             switch (c.op) {
                 .poll => if (cqe.res >= 0) {
                     const m: u32 = @intCast(cqe.res);

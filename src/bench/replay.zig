@@ -23,7 +23,7 @@ pub const LinkType = enum(u32) {
 pub const Reader = struct {
     data: []const u8,
     pos: usize,
-    endian: std.builtin.Endian,
+    endian: std.lang.Endian,
     link: LinkType,
 
     pub const Record = struct {
@@ -33,13 +33,13 @@ pub const Reader = struct {
 
     pub fn init(data: []const u8) !Reader {
         if (data.len < 24) return error.Truncated;
-        const endian: std.builtin.Endian = switch (std.mem.readInt(u32, data[0..4], .little)) {
+        const endian: std.lang.Endian = switch (std.mem.readInt(u32, data[0..4], .little)) {
             0xa1b2c3d4, 0xa1b23c4d => .little,
             0xd4c3b2a1, 0x4d3cb2a1 => .big,
             else => return error.NotPcap,
         };
         const link = std.mem.readInt(u32, data[20..24], endian) & 0x0fff_ffff;
-        return .{ .data = data, .pos = 24, .endian = endian, .link = @enumFromInt(link) };
+        return .{ .data = data, .pos = 24, .endian = endian, .link = @fromBackingInt(@intCast(link)) };
     }
 
     pub fn next(r: *Reader) !?Record {
@@ -297,7 +297,7 @@ test "pcap reader handles ethernet and raw link types and replay verifies gso ro
         std.mem.writeInt(u16, global[4..6], 2, .little);
         std.mem.writeInt(u16, global[6..8], 4, .little);
         std.mem.writeInt(u32, global[16..20], 65535, .little);
-        std.mem.writeInt(u32, global[20..24], @intFromEnum(link), .little);
+        std.mem.writeInt(u32, global[20..24], @backingInt(link), .little);
         try file.appendSlice(allocator, &global);
         var seq: u32 = 1000;
         var i: usize = 0;
@@ -326,5 +326,5 @@ test "pcap reader handles ethernet and raw link types and replay verifies gso ro
         try std.testing.expectEqual(@as(u64, 12), stats.segments);
         try std.testing.expectEqual(@as(u64, 12), stats.rewrites);
     }
-    try std.testing.expectError(error.NotPcap, Reader.init(&([_]u8{0} ** 24)));
+    try std.testing.expectError(error.NotPcap, Reader.init(&@as([24]u8, @splat(0))));
 }

@@ -42,7 +42,7 @@ pub fn Udp(comptime W: type) type {
             move_to: u16 = 0,
             meter: u32 = 0,
             last_active: u64 = 0,
-            timer: timeouts.Timer = .{ .kind = @intFromEnum(timeouts.Kind.udp_idle) },
+            timer: timeouts.Timer = .{ .kind = @backingInt(timeouts.Kind.udp_idle) },
             ip_id: u16 = 0,
             handler: HState = .{},
 
@@ -401,7 +401,7 @@ pub fn Udp(comptime W: type) type {
             const s = u.sessions.value(idx);
             s.* = rec.session;
             s.moved = false;
-            s.timer = .{ .kind = @intFromEnum(timeouts.Kind.udp_idle) };
+            s.timer = .{ .kind = @backingInt(timeouts.Kind.udp_idle) };
             w.handler.udpAdopt(w, &s.handler);
             const now = w.now();
             w.wheel.schedule(&s.timer, if (rec.deadline != 0) @max(rec.deadline, now + 1) else now + u.idle_ms);

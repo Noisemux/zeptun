@@ -535,9 +535,9 @@ const Parser = struct {
                 while (true) {
                     const key = try p.string();
                     try p.expect(':');
-                    const known = inline for (st.fields) |f| {
-                        if (std.mem.eql(u8, key, f.name)) {
-                            @field(out, f.name) = try p.value(f.type);
+                    const known = inline for (st.field_names, st.field_types) |name, FieldType| {
+                        if (std.mem.eql(u8, key, name)) {
+                            @field(out, name) = try p.value(FieldType);
                             break true;
                         }
                     } else false;

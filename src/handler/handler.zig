@@ -78,7 +78,7 @@ pub fn DialBuf(comptime W: type) type {
         const Self = @This();
 
         c: W.Loop.Completion = .{},
-        timer: timeouts.Timer = .{ .kind = @intFromEnum(timeouts.Kind.dial_timeout) },
+        timer: timeouts.Timer = .{ .kind = @backingInt(timeouts.Kind.dial_timeout) },
         owner: ?*Dial(W) = null,
         next: ?*Self = null,
         sa: sys.Sockaddr = .{},
@@ -118,7 +118,7 @@ pub fn Warm(comptime W: type) type {
         off: u16 = 0,
         rbuf: [64]u8 = undefined,
         rlen: u16 = 0,
-        timer: timeouts.Timer = .{ .kind = @intFromEnum(timeouts.Kind.pool_expire) },
+        timer: timeouts.Timer = .{ .kind = @backingInt(timeouts.Kind.pool_expire) },
 
         pub fn fromTimer(t: *timeouts.Timer) *Self {
             return @alignCast(@fieldParentPtr("timer", t));
@@ -332,7 +332,7 @@ pub fn Handler(comptime W: type) type {
             };
             if (b == h.free_bufs) h.free_bufs = b.next;
             b.c = .{ .userdata = d, .callback = onDial };
-            b.timer = .{ .kind = @intFromEnum(timeouts.Kind.dial_timeout) };
+            b.timer = .{ .kind = @backingInt(timeouts.Kind.dial_timeout) };
             b.owner = d;
             b.next = null;
             d.buf = b;
@@ -437,7 +437,7 @@ pub fn Handler(comptime W: type) type {
                     }
                     w.loop.submit(&b.c);
                     w.wheel.schedule(&b.timer, w.now() + h.connect_timeout_ms);
-                    if (h.warm_ready[@intFromEnum(WarmKind.tcp)] == 0) h.refill(w);
+                    if (h.warm_ready[@backingInt(WarmKind.tcp)] == 0) h.refill(w);
                     return;
                 }
             }
@@ -514,7 +514,7 @@ pub fn Handler(comptime W: type) type {
         }
 
         fn noteDemand(h: *Self, kind: WarmKind, now: u64) void {
-            const d = &h.demand[@intFromEnum(kind)];
+            const d = &h.demand[@backingInt(kind)];
             if (now -% d.start >= h.warm_idle_ms) {
                 d.prev = if (now -% d.start >= 2 * @as(u64, h.warm_idle_ms)) 0 else d.count;
                 d.count = 0;
@@ -541,7 +541,7 @@ pub fn Handler(comptime W: type) type {
         }
 
         fn warmTarget(h: *const Self, kind: WarmKind, now: u64) u16 {
-            const d = h.demand[@intFromEnum(kind)];
+            const d = h.demand[@backingInt(kind)];
             if (h.stopping or d.last == 0 or now -% d.last > 3 * @as(u64, h.warm_idle_ms)) return 0;
             if (h.proxyNear()) return 0;
             if (now < h.warm_backoff) return 0;
@@ -554,7 +554,7 @@ pub fn Handler(comptime W: type) type {
             if (!build_options.enable_socks5) return;
             const kinds = [_]WarmKind{ .tcp, .udp };
             for (kinds) |kind| {
-                const k = @intFromEnum(kind);
+                const k = @backingInt(kind);
                 const target = h.warmTarget(kind, w.now());
                 while (h.warm_ready[k] + h.warm_pending[k] < target) {
                     if (!h.startWarm(w, kind)) break;
@@ -564,7 +564,7 @@ pub fn Handler(comptime W: type) type {
 
         fn takeWarm(h: *Self, w: *W, kind: WarmKind) ?Taken {
             if (!build_options.enable_socks5) return null;
-            const k = @intFromEnum(kind);
+            const k = @backingInt(kind);
             while (h.warm_ready[k] > 0) {
                 var best: ?*Wc = null;
                 for (h.warm) |*s| {
@@ -615,14 +615,14 @@ pub fn Handler(comptime W: type) type {
             }
             slot.* = .{ .fd = fd, .kind = kind, .state = .connecting, .sa = sys.Sockaddr.fromEndpoint(server) };
             slot.c = .{ .op = .{ .connect = .{ .fd = fd, .addr = &slot.sa } }, .userdata = slot, .callback = onWarm };
-            h.warm_pending[@intFromEnum(kind)] += 1;
+            h.warm_pending[@backingInt(kind)] += 1;
             w.loop.submit(&slot.c);
             w.wheel.schedule(&slot.timer, w.now() + h.warm_idle_ms);
             return true;
         }
 
         fn dropWarm(h: *Self, w: *W, s: *Wc, failed: bool) void {
-            const k = @intFromEnum(s.kind);
+            const k = @backingInt(s.kind);
             if (s.state == .ready) {
                 h.warm_ready[k] -= 1;
             } else if (s.state != .free) {
@@ -668,7 +668,7 @@ pub fn Handler(comptime W: type) type {
 
         fn warmReady(h: *Self, s: *Wc) io.Disposition {
             h.proxyHealthy();
-            const k = @intFromEnum(s.kind);
+            const k = @backingInt(s.kind);
             s.state = .ready;
             h.warm_pending[k] -= 1;
             h.warm_ready[k] += 1;
@@ -1218,7 +1218,7 @@ pub fn Handler(comptime W: type) type {
             if (acc.len == 0) {
                 acc.reset(0);
             } else if (acc.off > 0 and acc.tailroom() < acc.cap / 4) {
-                std.mem.copyForwards(u8, acc.ptr[0..acc.len], acc.ptr[acc.off..][0..acc.len]);
+                @memmove(acc.ptr[0..acc.len], acc.ptr[acc.off..][0..acc.len]);
                 acc.off = 0;
             }
             return true;
@@ -1235,7 +1235,7 @@ pub fn Handler(comptime W: type) type {
                 };
                 if (acc.tailroom() == 0) {
                     if (acc.off > 0) {
-                        std.mem.copyForwards(u8, acc.ptr[0..acc.len], acc.ptr[acc.off..][0..acc.len]);
+                        @memmove(acc.ptr[0..acc.len], acc.ptr[acc.off..][0..acc.len]);
                         acc.off = 0;
                     } else {
                         return false;

@@ -147,7 +147,7 @@ fn splitAssignments(arena: std.mem.Allocator, argv: []const []const u8) Error![]
     var out: std.ArrayList([]const u8) = .empty;
     for (argv) |a| {
         if (std.mem.startsWith(u8, a, "--")) {
-            if (std.mem.indexOfScalar(u8, a, '=')) |eq| {
+            if (std.mem.findScalar(u8, a, '=')) |eq| {
                 try out.append(arena, a[0..eq]);
                 try out.append(arena, a[eq + 1 ..]);
                 continue;
