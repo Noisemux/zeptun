@@ -64,7 +64,7 @@ pub fn sumSimd(data: []const u8, initial: u64) u64 {
             i += block_bytes;
             blocks += 1;
         }) {
-            const words: @Vector(block_words, u16) = @bitCast(data[i..][0..block_bytes].*);
+            const words: @Vector(block_words, u16) = std.mem.bytesToValue(@Vector(block_words, u16), data[i..][0..block_bytes]);
             lanes += @as(@Vector(block_words, u32), words);
         }
         const wide: @Vector(block_words, u64) = lanes;
