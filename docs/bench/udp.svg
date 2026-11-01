@@ -5,13 +5,13 @@
 <text x="16" y="68" font-size="12" font-weight="600" fill="#334155">udp-100k</text>
 <text x="142" y="90" text-anchor="end" font-size="12" fill="#475569">zeptun-hybrid</text>
 <rect x="150" y="76" width="679" height="16" rx="3" fill="#2563eb"/>
-<text x="837" y="90" font-size="12" fill="#0f172a">99986 pps</text>
+<text x="837" y="90" font-size="12" fill="#0f172a">99960 pps</text>
 <text x="142" y="114" text-anchor="end" font-size="12" fill="#475569">zeptun-userspace</text>
 <rect x="150" y="100" width="679" height="16" rx="3" fill="#64748b"/>
-<text x="837" y="114" font-size="12" fill="#0f172a">99928 pps</text>
+<text x="837" y="114" font-size="12" fill="#0f172a">99968 pps</text>
 <text x="142" y="138" text-anchor="end" font-size="12" fill="#475569">hev</text>
-<rect x="150" y="124" width="680" height="16" rx="3" fill="#0f766e"/>
-<text x="838" y="138" font-size="12" fill="#0f172a">99988 pps</text>
+<rect x="150" y="124" width="666" height="16" rx="3" fill="#0f766e"/>
+<text x="824" y="138" font-size="12" fill="#0f172a">97949 pps</text>
 <text x="142" y="162" text-anchor="end" font-size="12" fill="#475569">singbox-gvisor</text>
 <rect x="150" y="148" width="2" height="16" rx="3" fill="#b45309"/>
 <text x="160" y="162" font-size="12" fill="#0f172a">0.00 pps</text>
@@ -19,18 +19,18 @@
 <rect x="150" y="172" width="2" height="16" rx="3" fill="#7c3aed"/>
 <text x="160" y="186" font-size="12" fill="#0f172a">0.00 pps</text>
 <text x="142" y="210" text-anchor="end" font-size="12" fill="#475569">tun2socks</text>
-<rect x="150" y="196" width="576" height="16" rx="3" fill="#be123c"/>
-<text x="734" y="210" font-size="12" fill="#0f172a">84733 pps</text>
+<rect x="150" y="196" width="287" height="16" rx="3" fill="#be123c"/>
+<text x="445" y="210" font-size="12" fill="#0f172a">42222 pps</text>
 <text x="16" y="250" font-size="12" font-weight="600" fill="#334155">udp-gso-100k</text>
 <text x="142" y="272" text-anchor="end" font-size="12" fill="#475569">zeptun-hybrid</text>
 <rect x="150" y="258" width="679" height="16" rx="3" fill="#2563eb"/>
-<text x="837" y="272" font-size="12" fill="#0f172a">99878 pps</text>
+<text x="837" y="272" font-size="12" fill="#0f172a">99967 pps</text>
 <text x="142" y="296" text-anchor="end" font-size="12" fill="#475569">zeptun-userspace</text>
-<rect x="150" y="282" width="679" height="16" rx="3" fill="#64748b"/>
-<text x="837" y="296" font-size="12" fill="#0f172a">99895 pps</text>
+<rect x="150" y="282" width="680" height="16" rx="3" fill="#64748b"/>
+<text x="838" y="296" font-size="12" fill="#0f172a">99970 pps</text>
 <text x="142" y="320" text-anchor="end" font-size="12" fill="#475569">hev</text>
-<rect x="150" y="306" width="679" height="16" rx="3" fill="#0f766e"/>
-<text x="837" y="320" font-size="12" fill="#0f172a">99978 pps</text>
+<rect x="150" y="306" width="670" height="16" rx="3" fill="#0f766e"/>
+<text x="828" y="320" font-size="12" fill="#0f172a">98507 pps</text>
 <text x="142" y="344" text-anchor="end" font-size="12" fill="#475569">singbox-gvisor</text>
 <rect x="150" y="330" width="2" height="16" rx="3" fill="#b45309"/>
 <text x="160" y="344" font-size="12" fill="#0f172a">0.00 pps</text>
@@ -38,6 +38,6 @@
 <rect x="150" y="354" width="2" height="16" rx="3" fill="#7c3aed"/>
 <text x="160" y="368" font-size="12" fill="#0f172a">0.00 pps</text>
 <text x="142" y="392" text-anchor="end" font-size="12" fill="#475569">tun2socks</text>
-<rect x="150" y="378" width="610" height="16" rx="3" fill="#be123c"/>
-<text x="768" y="392" font-size="12" fill="#0f172a">89831 pps</text>
+<rect x="150" y="378" width="306" height="16" rx="3" fill="#be123c"/>
+<text x="464" y="392" font-size="12" fill="#0f172a">45053 pps</text>
 </svg>
