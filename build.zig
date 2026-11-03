@@ -139,6 +139,17 @@ fn ffiLinksLibc(t: std.Target, android_libc: ?[]const u8) bool {
 
 var android_libc_file: ?[]const u8 = null;
 
+fn wintunArch(target: std.Target) ?[]const u8 {
+    if (target.os.tag != .windows) return null;
+    return switch (target.cpu.arch) {
+        .x86_64 => "amd64",
+        .aarch64 => "arm64",
+        .x86 => "x86",
+        .arm => "arm",
+        else => null,
+    };
+}
+
 fn makeArtifacts(b: *std.Build, target: std.Build.ResolvedTarget, optimize: std.lang.Optimize, o: Overrides, strip: ?bool) Artifacts {
     const features = resolveFeatures(o, target.result);
     const lib_libc = ffiLinksLibc(target.result, android_libc_file);
@@ -237,7 +248,13 @@ pub fn build(b: *std.Build) void {
     b.modules.put(b.graph.arena, "zeptun", main.engine) catch @panic("OOM");
     b.installArtifact(main.static_lib);
     if (main.shared_lib) |lib| b.installArtifact(lib);
-    b.installFile("include/zeptun.h", "include/zeptun.h");
+    b.getInstallStep().dependOn(&b.addInstallHeaderFile(b.path("include/zeptun.h"), "zeptun.h").step);
+
+    if (wintunArch(target.result)) |arch| {
+        const dep = b.dependency("wintun", .{});
+        b.getInstallStep().dependOn(&b.addInstallBinFile(dep.path(b.fmt("bin/{s}/wintun.dll", .{arch})), "wintun.dll").step);
+        b.getInstallStep().dependOn(&b.addInstallBinFile(dep.path("LICENSE.txt"), "wintun-LICENSE.txt").step);
+    }
 
     const can_link = canLinkExecutables(target.result);
     if (can_link) {

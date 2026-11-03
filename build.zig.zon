@@ -3,7 +3,13 @@
     .version = "1.1.3",
     .fingerprint = 0x8a2cd6c5827771c8,
     .minimum_zig_version = "0.17.0",
-    .dependencies = .{},
+    .dependencies = .{
+        .wintun = .{
+            .url = "https://www.wintun.net/builds/wintun-0.14.1.zip",
+            .hash = "N-V-__8AAF1XGAA0OBouBSFBpXwAkOznbQvDIxAqbWD0KMAU",
+            .lazy = true,
+        },
+    },
     .paths = .{
         "build.zig",
         "build.zig.zon",

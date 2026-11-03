@@ -115,10 +115,8 @@ jobs:
         include:
           - name: x86_64
             target: x86_64-windows-gnu
-            wintun: amd64
           - name: arm64
             target: aarch64-windows-gnu
-            wintun: arm64
     steps:
       - uses: actions/checkout@v7
       - uses: mlugg/setup-zig@v2
@@ -132,7 +130,8 @@ jobs:
           cp zig-out/bin/zeptun.exe zeptun-win-${{ matrix.name }}/
           cp conf/zeptun.toml zeptun-win-${{ matrix.name }}/
           cp README.md LICENSE zeptun-win-${{ matrix.name }}/ 2> /dev/null || true
-          sh scripts/fetch_wintun.sh ${{ matrix.wintun }} zeptun-win-${{ matrix.name }}
+          cp zig-out/bin/wintun.dll zeptun-win-${{ matrix.name }}/
+          cp zig-out/bin/wintun-LICENSE.txt zeptun-win-${{ matrix.name }}/
           test -f zeptun-win-${{ matrix.name }}/wintun.dll
           zip -r zeptun-windows-${{ matrix.name }}.zip zeptun-win-${{ matrix.name }}
       - uses: actions/upload-artifact@v7

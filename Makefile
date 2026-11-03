@@ -1,6 +1,6 @@
 -include build.mk
 
-.PHONY: all cli lib static shared cross android apple wintun docker test test-ffi test-integration bench install uninstall clean
+.PHONY: all cli lib static shared cross android apple docker test test-ffi test-integration bench install uninstall clean
 
 all: cli lib
 
@@ -18,8 +18,6 @@ android:
 apple:
 	sh scripts/make_xcframework.sh
 
-wintun:
-	sh scripts/fetch_wintun.sh $(WINTUN_ARCH) $(OUTDIR)/bin
 
 test:
 	$(ZIG) build test
