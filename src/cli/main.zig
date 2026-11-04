@@ -145,18 +145,10 @@ fn installSignals() void {
     std.posix.sigaction(.PIPE, &act, null);
 }
 
-var safe_allocator = std.heap.SafeAllocator.init(std.heap.page_allocator, .{});
-
-fn engineAllocator() std.mem.Allocator {
-    return if (builtin.mode == .debug) safe_allocator.allocator() else std.heap.page_allocator;
-}
-
-pub fn main(init: std.process.Init.Minimal) u8 {
-    environ = init.environ;
-    var arena_state = std.heap.ArenaAllocator.init(std.heap.page_allocator);
-    defer arena_state.deinit();
-    const arena = arena_state.allocator();
-    const all = init.args.toSlice(arena) catch {
+pub fn main(init: std.process.Init) u8 {
+    environ = init.minimal.environ;
+    const arena = init.arena.allocator();
+    const all = init.minimal.args.toSlice(arena) catch {
         file.writeStd(.err, "zeptun: out of memory\n");
         return 2;
     };
@@ -194,7 +186,7 @@ pub fn main(init: std.process.Init.Minimal) u8 {
     };
     zeptun.log.setLevel(parsed.st.cfg.log_level);
     std.process.raiseFileDescriptorLimit();
-    const e = Engine.create(engineAllocator(), parsed.st.cfg) catch |err| {
+    const e = Engine.create(init.gpa, parsed.st.cfg) catch |err| {
         file.print(.err, "zeptun: invalid configuration: {t}\n", .{err});
         return 2;
     };

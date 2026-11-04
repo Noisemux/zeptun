@@ -1,6 +1,6 @@
 # Building
 
-Zig 0.17.0 is the only requirement. There are no submodules and no vendored C libraries.
+Zig 0.17.1 is the only requirement. There are no submodules and no vendored C libraries.
 
 ## Unix
 
@@ -57,23 +57,20 @@ Produces `zig-out/Zeptun.xcframework` with iOS device, iOS simulator and macOS s
 
 ```sh
 zig build -Dtarget=x86_64-windows-gnu -Doptimize=fast
-make wintun
 ```
 
-The tunnel uses Wintun. The library ships with the source in `third-part/wintun`, together with its licence, README and header, for `amd64`, `arm64`, `x86` and `arm`:
+The tunnel uses Wintun. `build.zig.zon` pins the official distribution as a lazy package dependency, so the first build for a Windows target fetches `wintun-<version>.zip` from wintun.net, checks it against the recorded hash, and installs next to the executable:
 
 ```
-third-part/wintun/
-    LICENSE.txt
-    README.md
-    VERSION
-    bin/<arch>/wintun.dll
-    include/wintun.h
+zig-out/bin/
+    zeptun.exe
+    wintun.dll
+    wintun-LICENSE.txt
 ```
 
-`make wintun` copies the matching library and its licence into `zig-out/bin`, next to the executable, which is where the loader looks first (`LOAD_LIBRARY_SEARCH_APPLICATION_DIR`). Pass `WINTUN_ARCH=arm64` for arm64 hosts, or call `scripts/fetch_wintun.sh ARCH DIR` for any other directory. Released archives already contain the library, so a downloaded release needs no extra step.
+The DLL follows the target: `x86_64` takes the `amd64` build, `aarch64` the `arm64` one, `x86` and `arm` the remaining two. It lands in `zig-out/bin` beside the executable, which is the first place the loader looks: `LoadLibraryExW` searches the program directory, then `system32`. Whenever you ship the executable yourself, copy `wintun.dll` and `wintun-LICENSE.txt` along with it, as the release archives do. After the first fetch the package is cached, so later builds work offline; `zig build --fetch=all` primes that cache without building.
 
-`scripts/fetch_wintun.sh --vendor` refreshes the vendored copy: it downloads the official distribution from wintun.net, checks it against the SHA-256 pinned in the script, and replaces the tree. Set `WINTUN_VERSION` and `WINTUN_SHA256` to move to a new release.
+To move to a new Wintun release, edit the `url` in `build.zig.zon` and run `zig fetch --save` with the same URL so Zig records the matching hash.
 
 Wintun is not modified, and its prebuilt binaries licence permits redistribution alongside software that uses only the documented API, which is what `src/device/wintun.zig` does through `LoadLibraryEx` and `GetProcAddress`.
 

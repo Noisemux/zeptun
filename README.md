@@ -36,7 +36,7 @@ Method, runner specification, latency, UDP, memory and the raw tables: [docs/ben
 
 ## Build
 
-Zig 0.17.0 is the only requirement.
+Zig 0.17.1 is the only requirement.
 
 ### Unix
 
@@ -69,10 +69,9 @@ This produces `zig-out/Zeptun.xcframework` with the iOS device, iOS simulator an
 
 ```sh
 zig build -Dtarget=x86_64-windows-gnu -Doptimize=fast
-make wintun
 ```
 
-The tunnel uses Wintun, which is vendored in `third-part/wintun` with its licence and header, so no download is needed: `make wintun` copies the right `wintun.dll` next to the executable (`WINTUN_ARCH=arm64` for arm64). The released Windows archives already contain it.
+The tunnel uses Wintun, pinned in `build.zig.zon` as a lazy package dependency: the first build for a Windows target fetches the official distribution from wintun.net, checks it against the recorded hash, and installs the `wintun.dll` for that architecture (`amd64` for x86_64, `arm64` for arm64) next to the executable, with its licence as `wintun-LICENSE.txt`. `zig build --fetch=all` primes that download without building, and later builds work offline. The released Windows archives already contain both files.
 
 ### Library
 
