@@ -53,6 +53,22 @@ wait_tun() {
         fi
         sleep 0.05
     done
+    printf '  %s never came up, or no rule points at table 2022\n' "$TUN_NAME" >&2
+    return 1
+}
+
+# Says whether traffic to the benchmark servers really leaves through $TUN_NAME.
+#
+# Without this an engine that failed to start is not noticed: its table stays empty, the main
+# table still holds a default route through the veth, and every scenario then measures the bare
+# veth. That reads as line rate at no CPU cost, which looks like a result and is not one.
+verify_path() {
+    got=$(ip route get "$SERVER_ADDR" 2> /dev/null | head -1)
+    case "$got" in
+        *"dev $TUN_NAME"*) return 0 ;;
+    esac
+    printf '  %s does not carry the traffic: `ip route get %s` says `%s`\n' \
+        "$TUN_NAME" "$SERVER_ADDR" "$got" >&2
     return 1
 }
 

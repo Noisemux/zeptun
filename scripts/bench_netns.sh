@@ -62,9 +62,9 @@ wait_port 1080
 ENGINE_PIDS=""
 
 install_routes() {
-    ip route replace default dev "$1" table 2022
-    ip rule add pref 9000 lookup main suppress_prefixlength 0
-    ip rule add pref 9001 lookup 2022
+    ip route replace default dev "$1" table 2022 || return 1
+    ip rule add pref 9000 lookup main suppress_prefixlength 0 || return 1
+    ip rule add pref 9001 lookup 2022 || return 1
 }
 
 remove_routes() {
@@ -99,10 +99,12 @@ start_engine() {
             "$TUN2SOCKS" -d tun://t2s0 -p "socks5://$VETH_SERVER:1080" --mtu "$MTU" --loglevel error > "$OUT_DIR/tun2socks.log" 2>&1 &
             ENGINE_PIDS=$!
             for _ in $(seq 1 50); do ip -o link show t2s0 > /dev/null 2>&1 && break; sleep 0.1; done
+            ip -o link show t2s0 > /dev/null 2>&1 || return 1
             ip addr add 198.18.0.1/15 dev t2s0
             ip link set t2s0 up
-            install_routes t2s0
             TUN_NAME=t2s0
+            install_routes t2s0 || return 1
+            wait_tun || return 1
             ;;
         singbox-*)
             [ -n "$SINGBOX" ] || return 1
@@ -110,9 +112,9 @@ start_engine() {
             printf '{"log":{"level":"error"},"inbounds":[{"type":"tun","tag":"tun-in","interface_name":"sb0","address":["172.18.0.1/30"],"mtu":%s,"auto_route":false,"stack":"%s"}],"outbounds":[{"type":"socks","tag":"proxy","server":"%s","server_port":1080}],"route":{"final":"proxy"}}' "$MTU" "$stack" "$VETH_SERVER" > "$OUT_DIR/singbox.json"
             "$SINGBOX" run -c "$OUT_DIR/singbox.json" > "$OUT_DIR/$engine.log" 2>&1 &
             ENGINE_PIDS=$!
-            for _ in $(seq 1 50); do ip -o link show sb0 2> /dev/null | grep -q UP && break; sleep 0.1; done
-            install_routes sb0
             TUN_NAME=sb0
+            install_routes sb0 || return 1
+            wait_tun || return 1
             ;;
         hev)
             [ -n "$HEV" ] || return 1
@@ -129,11 +131,13 @@ start_engine() {
                 ip -o link show hev0 2> /dev/null | grep -q UP && break
                 sleep 0.1
             done
-            install_routes hev0
             TUN_NAME=hev0
+            install_routes hev0 || return 1
+            wait_tun || return 1
             ;;
     esac
     sleep 1
+    verify_path || return 1
 }
 
 stop_engine() {
