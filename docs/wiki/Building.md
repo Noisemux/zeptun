@@ -1,6 +1,6 @@
 # Building
 
-Zig 0.17.0 is the only requirement. There are no submodules and no vendored C libraries.
+Zig 0.17.1 is the only requirement. There are no submodules and no vendored C libraries.
 
 ## Unix
 

@@ -36,7 +36,7 @@ Method, runner specification, latency, UDP, memory and the raw tables: [docs/ben
 
 ## Build
 
-Zig 0.17.0 is the only requirement.
+Zig 0.17.1 is the only requirement.
 
 ### Unix
 
