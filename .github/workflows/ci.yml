@@ -101,8 +101,14 @@ jobs:
           name: zeptun-android-jniLibs
           path: zig-out/android
 
+  # One job rather than three. Each `macos-15` job waits for its own runner, and when none comes
+  # within fifteen minutes the job is cancelled holding no runner, no steps and nothing to read:
+  # three of them turned a scarce runner into a red run that a plain re-run then fixed. One job
+  # asks for one runner, checks out and installs zig once, and builds the xcframework once rather
+  # than twice.
   macos:
     runs-on: macos-15
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v7
       - uses: mlugg/setup-zig@v2
@@ -110,20 +116,6 @@ jobs:
           version: ${{ env.ZIG_VERSION }}
       - name: unit tests
         run: zig build test --summary all
-      - name: xcframework
-        run: sh scripts/make_xcframework.sh
-      - uses: actions/upload-artifact@v7
-        with:
-          name: Zeptun.xcframework
-          path: zig-out/Zeptun.xcframework
-
-  macos-tunnel:
-    runs-on: macos-15
-    steps:
-      - uses: actions/checkout@v7
-      - uses: mlugg/setup-zig@v2
-        with:
-          version: ${{ env.ZIG_VERSION }}
       - name: build
         run: zig build -Doptimize=fast
       - name: tunnel through a real utun device
@@ -132,24 +124,20 @@ jobs:
         run: |
           mkdir -p "$LOG_DIR"
           sudo -E sh scripts/macos_integration.sh zig-out/bin/zeptun
+      - name: c abi test inside the simulator
+        run: sh scripts/ios_simulator.sh
+      - name: xcframework
+        run: sh scripts/make_xcframework.sh
+      - uses: actions/upload-artifact@v7
+        with:
+          name: Zeptun.xcframework
+          path: zig-out/Zeptun.xcframework
       - uses: actions/upload-artifact@v7
         if: failure()
         with:
           name: macos-tunnel-logs
           path: macos-logs
           if-no-files-found: ignore
-
-  ios-simulator:
-    runs-on: macos-15
-    steps:
-      - uses: actions/checkout@v7
-      - uses: mlugg/setup-zig@v2
-        with:
-          version: ${{ env.ZIG_VERSION }}
-      - name: c abi test inside the simulator
-        run: sh scripts/ios_simulator.sh
-      - name: xcframework
-        run: sh scripts/make_xcframework.sh
 
   windows:
     runs-on: windows-2022

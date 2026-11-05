@@ -58,7 +58,11 @@ check "dns over udp keeps working under repetition" sh -c "for i in 1 2 3 4 5; d
 check "icmp through the tunnel" ping -c 3 -t 5 "$HTTP_TARGET"
 check "a destination outside the tunnel still works" sh -c "curl -s -m 25 -o /dev/null -w '%{http_code}' https://api.github.com | grep -qE '200|401|403'"
 
+# A plain `wait` here hangs for as long as the engine takes to go, and a job that hangs is a job
+# that tells you nothing when it is killed. This is the wait `bench_netns.sh` already uses.
 kill -INT "$engine"
+for _ in $(seq 1 50); do kill -0 "$engine" 2> /dev/null || break; sleep 0.1; done
+kill -9 "$engine" 2> /dev/null || true
 wait "$engine" 2> /dev/null || true
 sleep 1
 
