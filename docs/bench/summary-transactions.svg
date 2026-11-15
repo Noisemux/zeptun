@@ -4,11 +4,11 @@
 <text x="12" y="36" font-size="11" fill="#64748b">GitHub-hosted runner &#183; higher is better</text>
 <text x="120" y="58" text-anchor="end" font-size="11" fill="#475569">zeptun</text>
 <rect x="128" y="46" width="238" height="13" rx="2" fill="#2563eb"/>
-<text x="374" y="59" font-size="11" fill="#0f172a">46228 tps</text>
+<text x="374" y="59" font-size="11" fill="#0f172a">83668 tps</text>
 <text x="120" y="78" text-anchor="end" font-size="11" fill="#475569">hev-socks5-tunnel</text>
-<rect x="128" y="66" width="228" height="13" rx="2" fill="#94a3b8"/>
-<text x="364" y="79" font-size="11" fill="#0f172a">44415 tps</text>
+<rect x="128" y="66" width="216" height="13" rx="2" fill="#94a3b8"/>
+<text x="352" y="79" font-size="11" fill="#0f172a">76000 tps</text>
 <text x="120" y="98" text-anchor="end" font-size="11" fill="#475569">tun2socks</text>
-<rect x="128" y="86" width="148" height="13" rx="2" fill="#94a3b8"/>
-<text x="284" y="99" font-size="11" fill="#0f172a">28773 tps</text>
+<rect x="128" y="86" width="115" height="13" rx="2" fill="#94a3b8"/>
+<text x="251" y="99" font-size="11" fill="#0f172a">40575 tps</text>
 </svg>

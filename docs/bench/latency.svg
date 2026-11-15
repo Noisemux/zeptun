@@ -4,41 +4,41 @@
 <text x="16" y="42" font-size="12" fill="#64748b">median of the repeats &#183; lower is better</text>
 <text x="16" y="68" font-size="12" font-weight="600" fill="#334155">rr</text>
 <text x="142" y="90" text-anchor="end" font-size="12" fill="#475569">zeptun-hybrid</text>
-<rect x="150" y="76" width="85" height="16" rx="3" fill="#2563eb"/>
-<text x="243" y="90" font-size="12" fill="#0f172a">94.50 us</text>
+<rect x="150" y="76" width="155" height="16" rx="3" fill="#2563eb"/>
+<text x="313" y="90" font-size="12" fill="#0f172a">161 us</text>
 <text x="142" y="114" text-anchor="end" font-size="12" fill="#475569">zeptun-userspace</text>
-<rect x="150" y="100" width="79" height="16" rx="3" fill="#64748b"/>
-<text x="237" y="114" font-size="12" fill="#0f172a">87.50 us</text>
+<rect x="150" y="100" width="155" height="16" rx="3" fill="#64748b"/>
+<text x="313" y="114" font-size="12" fill="#0f172a">161 us</text>
 <text x="142" y="138" text-anchor="end" font-size="12" fill="#475569">hev</text>
-<rect x="150" y="124" width="81" height="16" rx="3" fill="#0f766e"/>
-<text x="239" y="138" font-size="12" fill="#0f172a">90.00 us</text>
+<rect x="150" y="124" width="155" height="16" rx="3" fill="#0f766e"/>
+<text x="313" y="138" font-size="12" fill="#0f172a">161 us</text>
 <text x="142" y="162" text-anchor="end" font-size="12" fill="#475569">tun2socks</text>
-<rect x="150" y="148" width="128" height="16" rx="3" fill="#b45309"/>
-<text x="286" y="162" font-size="12" fill="#0f172a">142 us</text>
+<rect x="150" y="148" width="219" height="16" rx="3" fill="#b45309"/>
+<text x="377" y="162" font-size="12" fill="#0f172a">227 us</text>
 <text x="16" y="202" font-size="12" font-weight="600" fill="#334155">rr-8x1k</text>
 <text x="142" y="224" text-anchor="end" font-size="12" fill="#475569">zeptun-hybrid</text>
-<rect x="150" y="210" width="334" height="16" rx="3" fill="#2563eb"/>
-<text x="492" y="224" font-size="12" fill="#0f172a">370 us</text>
+<rect x="150" y="210" width="210" height="16" rx="3" fill="#2563eb"/>
+<text x="368" y="224" font-size="12" fill="#0f172a">218 us</text>
 <text x="142" y="248" text-anchor="end" font-size="12" fill="#475569">zeptun-userspace</text>
-<rect x="150" y="234" width="282" height="16" rx="3" fill="#64748b"/>
-<text x="440" y="248" font-size="12" fill="#0f172a">312 us</text>
+<rect x="150" y="234" width="188" height="16" rx="3" fill="#64748b"/>
+<text x="346" y="248" font-size="12" fill="#0f172a">195 us</text>
 <text x="142" y="272" text-anchor="end" font-size="12" fill="#475569">hev</text>
-<rect x="150" y="258" width="347" height="16" rx="3" fill="#0f766e"/>
-<text x="505" y="272" font-size="12" fill="#0f172a">384 us</text>
+<rect x="150" y="258" width="223" height="16" rx="3" fill="#0f766e"/>
+<text x="381" y="272" font-size="12" fill="#0f172a">231 us</text>
 <text x="142" y="296" text-anchor="end" font-size="12" fill="#475569">tun2socks</text>
-<rect x="150" y="282" width="542" height="16" rx="3" fill="#b45309"/>
-<text x="700" y="296" font-size="12" fill="#0f172a">600 us</text>
+<rect x="150" y="282" width="394" height="16" rx="3" fill="#b45309"/>
+<text x="552" y="296" font-size="12" fill="#0f172a">408 us</text>
 <text x="16" y="336" font-size="12" font-weight="600" fill="#334155">crr</text>
 <text x="142" y="358" text-anchor="end" font-size="12" fill="#475569">zeptun-hybrid</text>
-<rect x="150" y="344" width="481" height="16" rx="3" fill="#2563eb"/>
-<text x="639" y="358" font-size="12" fill="#0f172a">532 us</text>
+<rect x="150" y="344" width="537" height="16" rx="3" fill="#2563eb"/>
+<text x="695" y="358" font-size="12" fill="#0f172a">556 us</text>
 <text x="142" y="382" text-anchor="end" font-size="12" fill="#475569">zeptun-userspace</text>
-<rect x="150" y="368" width="343" height="16" rx="3" fill="#64748b"/>
-<text x="501" y="382" font-size="12" fill="#0f172a">380 us</text>
+<rect x="150" y="368" width="401" height="16" rx="3" fill="#64748b"/>
+<text x="559" y="382" font-size="12" fill="#0f172a">416 us</text>
 <text x="142" y="406" text-anchor="end" font-size="12" fill="#475569">hev</text>
-<rect x="150" y="392" width="443" height="16" rx="3" fill="#0f766e"/>
-<text x="601" y="406" font-size="12" fill="#0f172a">490 us</text>
+<rect x="150" y="392" width="403" height="16" rx="3" fill="#0f766e"/>
+<text x="561" y="406" font-size="12" fill="#0f172a">418 us</text>
 <text x="142" y="430" text-anchor="end" font-size="12" fill="#475569">tun2socks</text>
 <rect x="150" y="416" width="680" height="16" rx="3" fill="#b45309"/>
-<text x="838" y="430" font-size="12" fill="#0f172a">752 us</text>
+<text x="838" y="430" font-size="12" fill="#0f172a">704 us</text>
 </svg>
